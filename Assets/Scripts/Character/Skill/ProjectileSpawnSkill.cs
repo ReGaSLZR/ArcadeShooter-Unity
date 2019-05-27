@@ -23,7 +23,7 @@ namespace Character.Skill {
 		}
 
 		public override void UseSkill() {
-			LogUtil.PrintInfo(this, this.GetType(), "Spawning projectile...");
+//			LogUtil.PrintInfo(this, this.GetType(), "Spawning projectile...");
 			GameObject projectile = Instantiate(m_prefabProjectile, m_childSpawnPoint.gameObject.transform.position,
 				m_childSpawnPoint.gameObject.transform.rotation);
 			

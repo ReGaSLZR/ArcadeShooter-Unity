@@ -49,6 +49,11 @@ namespace Character {
 				})
 				.AddTo(this);
 		}
+
+		public void StopMoving() {
+			LogUtil.PrintInfo(this, this.GetType(), "StopMoving() called.");
+			Destroy(this);
+		}
 			
 	}
 
