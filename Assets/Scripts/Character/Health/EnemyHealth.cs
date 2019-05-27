@@ -16,6 +16,7 @@ namespace Character.Health {
 
 		private IEnumerator CorKill() {
 			ActivateFX();
+			m_collider2D.isTrigger = true;
 
 			yield return new WaitForSeconds(m_fxDuration);
 			Destroy(this.gameObject);

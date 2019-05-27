@@ -4,6 +4,7 @@ using UniRx.Triggers;
 
 namespace Character.Health {
 
+	[RequireComponent(typeof(Collider2D))]
 	public abstract class HealthBehaviour : MonoBehaviour {
 
 		[Tooltip("Changes to health value will only apply on game restart.")]
@@ -16,12 +17,14 @@ namespace Character.Health {
 		[Range(0f, 10f)]
 		[SerializeField] protected float m_fxDuration = 0f;
 
+		protected Collider2D m_collider2D;
 		public ReactiveProperty<bool> m_reactiveIsDead { get; private set; }
 
 		public abstract void ApplyDamage();
 
 		private void Awake() {
 			m_reactiveIsDead = new ReactiveProperty<bool>(false);
+			m_collider2D = GetComponent<Collider2D>();
 
 			if(m_childMain == null) {
 				LogUtil.PrintError(this, this.GetType(), 
