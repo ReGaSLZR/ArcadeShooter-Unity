@@ -8,6 +8,7 @@ namespace Character.Skill {
 	public class SpotHitSkill : SkillBehaviour {
 
 		[SerializeField] private TargetDetector m_targetDetector;
+		[SerializeField] private bool m_isDestroyedOnHit;
 
 		private void Awake() {
 			if(m_targetDetector == null) {
@@ -19,6 +20,10 @@ namespace Character.Skill {
 		public override void UseSkill() {
 			foreach(HealthBehaviour killable in GetKillables()) {
 				killable.ApplyDamage();
+			}
+
+			if(m_isDestroyedOnHit) {
+				Destroy(this.gameObject);
 			}
 		}
 

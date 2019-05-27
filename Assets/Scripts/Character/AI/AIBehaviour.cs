@@ -9,7 +9,6 @@ namespace Character.AI {
 
 	public abstract class AIBehaviour : MonoBehaviour {
 
-		[Header("Default Character Components")]
 		[SerializeField] protected Aim m_aim;
 		[SerializeField] protected Movement m_movement;
 		[Space]

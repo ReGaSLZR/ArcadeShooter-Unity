@@ -195,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_targetDetector: {fileID: 114760283821123448}
+  m_isDestroyedOnHit: 1
 --- !u!114 &114983842491313072
 MonoBehaviour:
   m_ObjectHideFlags: 1
