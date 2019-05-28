@@ -229,8 +229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_targetDetector: {fileID: 114474983327145668}
   m_isDestroyedOnHit: 1
-  m_prefabFXOnDestroy: {fileID: 1041338780192484, guid: dacd1401ddffac04da8f11f1ad091e4d,
-    type: 2}
+  m_fxDeath: 1
 --- !u!114 &114571709739319140
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -243,9 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_health: 1
-  m_prefabFXKilled:
-  - {fileID: 1967799099404402, guid: 2c54122ec64824143acb3b3de2116f53, type: 2}
-  - {fileID: 1042373214462404, guid: 9d11470db0ce91343913722b72100da2, type: 2}
+  m_fxDeath: 1
 --- !u!114 &114665800584891632
 MonoBehaviour:
   m_ObjectHideFlags: 1

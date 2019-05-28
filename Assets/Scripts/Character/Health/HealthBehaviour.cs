@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using Injection.Model;
+using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Zenject;
 
 namespace Character.Health {
 
@@ -10,7 +12,10 @@ namespace Character.Health {
 		[Tooltip("Changes to health value will only apply on game restart.")]
 		[Range(1, 99)]
 		[SerializeField] protected int m_health = 1;
-		[SerializeField] protected GameObject[] m_prefabFXKilled;
+        [SerializeField] private FXModel.FXDeath m_fxDeath;
+
+        [Inject] readonly FXModel.IGetter m_fxModel;
+        [Inject] readonly Injection.Instantiator m_instantiator;
 
 		public ReactiveProperty<bool> m_reactiveIsDead { get; private set; }
 
@@ -32,14 +37,8 @@ namespace Character.Health {
 		}
 
 		private void ActivateFX() {
-            m_health = -1; //to prevent another call to this method
-
-			if (m_prefabFXKilled.Length > 0) {
-                Instantiate(m_prefabFXKilled[Random.Range(0, m_prefabFXKilled.Length-1)], transform.position, transform.rotation);
-			} else {
-				LogUtil.PrintInfo(this, this.GetType(), 
-					"ActivateFX() Sorry, no Kill FX set.");
-			}
+            m_health = -1; //to prevent another call to this method        
+            m_instantiator.InstantiateInjectPrefab(m_fxModel.GetRandomFXDeath(m_fxDeath), this.gameObject);
 		}
 
 	}

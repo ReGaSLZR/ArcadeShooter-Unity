@@ -1,6 +1,8 @@
 ﻿using Character.Health;
+using Injection.Model;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace Character.Skill {
 
@@ -9,7 +11,10 @@ namespace Character.Skill {
 		[SerializeField] private TargetDetector m_targetDetector;
         [Space]
 		[SerializeField] private bool m_isDestroyedOnHit;
-        [SerializeField] private GameObject m_prefabFXOnDestroy;
+        [SerializeField] private FXModel.FXDeath m_fxDeath;
+
+        [Inject] readonly FXModel.IGetter m_fxModel;
+        [Inject] readonly Injection.Instantiator m_instantiator;
 
 		private void Awake() {
 			if(m_targetDetector == null) {
@@ -24,9 +29,7 @@ namespace Character.Skill {
 			}
 
 			if(m_isDestroyedOnHit) {
-                if(m_prefabFXOnDestroy != null) {
-                    Instantiate(m_prefabFXOnDestroy, transform.position, transform.rotation);
-                }
+                m_instantiator.InstantiateInjectPrefab(m_fxModel.GetRandomFXDeath(m_fxDeath), this.gameObject);
 				Destroy(this.gameObject);
 			}
 		}
@@ -41,9 +44,9 @@ namespace Character.Skill {
                     if (killable != null) {
                         killables.Add(killable);
                     }
-                    else {
-                        LogUtil.PrintWarning(this, this.GetType(), "No HealthBehaviour attached to detected target.");
-                    }
+                    //else {
+                    //    LogUtil.PrintWarning(this, this.GetType(), "No HealthBehaviour attached to detected target.");
+                    //}
 				}
 			}
 

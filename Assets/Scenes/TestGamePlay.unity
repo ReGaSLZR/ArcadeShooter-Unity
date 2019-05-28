@@ -383,6 +383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_boundsModel: {fileID: 1627921641}
+  m_fxModel: {fileID: 1627921643}
 --- !u!114 &322603529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1071,6 +1072,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1627921642}
   - component: {fileID: 1627921641}
+  - component: {fileID: 1627921643}
   m_Layer: 0
   m_Name: Models
   m_TagString: Untagged
@@ -1103,6 +1105,27 @@ Transform:
   m_Father: {fileID: 322603527}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1627921643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1627921640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67f9976063c2e824cac881fd38c09dd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_fxDeathShip:
+  - {fileID: 1543577421789922, guid: 42037230f458b6844bfd7c593a7d993d, type: 2}
+  - {fileID: 1984666088117346, guid: bca54d8e7822ec24394b8ca20a938097, type: 2}
+  - {fileID: 1041338780192484, guid: dacd1401ddffac04da8f11f1ad091e4d, type: 2}
+  m_fxDeathProjectile:
+  - {fileID: 1420088154306968, guid: 5c0bfaf8a46981745895c962195fac9d, type: 2}
+  - {fileID: 1264558010449144, guid: 600c2a17e8ae1d1489565dff525000b6, type: 2}
+  m_fxDeathAsteroid:
+  - {fileID: 1967799099404402, guid: 2c54122ec64824143acb3b3de2116f53, type: 2}
+  - {fileID: 1042373214462404, guid: 9d11470db0ce91343913722b72100da2, type: 2}
 --- !u!1 &1718883799
 GameObject:
   m_ObjectHideFlags: 0
@@ -1227,10 +1250,6 @@ Prefab:
     - target: {fileID: 4013891282909030, guid: b493e35aae3f5614bb89140e7568aeea, type: 2}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1720132641804916, guid: b493e35aae3f5614bb89140e7568aeea, type: 2}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b493e35aae3f5614bb89140e7568aeea, type: 2}
