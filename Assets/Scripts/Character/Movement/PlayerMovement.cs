@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿using Injection.Model;
+using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Zenject;
 
 namespace Character.Movement {
 
     public class PlayerMovement : MovementBehaviour
     {
+
+        [Inject] readonly BoundsModel.IGetter m_boundsModel;
 
         private void Start() {
             SetInputObservers();
@@ -22,8 +26,7 @@ namespace Character.Movement {
                 .Subscribe(x => {
                     Vector2 movement = Vector2.zero;
                     movement.x = x;
-
-                    m_rigidBody2D.position += (movement * m_movementSpeed * Time.fixedDeltaTime);
+                    MoveToPosition(movement);
                 })
                 .AddTo(this);
 
@@ -33,9 +36,14 @@ namespace Character.Movement {
                     Vector2 movement = Vector2.zero;
                     movement.y = y;
 
-                    m_rigidBody2D.position += (movement * m_movementSpeed * Time.fixedDeltaTime);
+                    MoveToPosition(movement);
                 })
                 .AddTo(this);
+        }
+
+        private void MoveToPosition(Vector2 position) {
+            m_rigidBody2D.position += (position * m_movementSpeed * Time.fixedDeltaTime);
+            m_rigidBody2D.MovePosition(m_boundsModel.ClampPositionToScreenBounds(m_rigidBody2D.position));
         }
 
     }

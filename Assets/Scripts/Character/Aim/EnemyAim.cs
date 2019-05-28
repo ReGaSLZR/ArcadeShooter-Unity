@@ -64,8 +64,7 @@ namespace Character.Aim {
 
             if (m_tempRandomAimCalls >= m_randomAimRefresh) {
                 m_tempRandomAimCalls = 0;
-                Vector2 randomAim = m_boundsModel.GetRandomPosition();
-                m_cachedRandomAimPosition = new Vector3(randomAim.x, randomAim.y, 0);
+                m_cachedRandomAimPosition = m_boundsModel.GetRandomPositionV3();
             }
             else {
                 m_tempRandomAimCalls++;

@@ -63,7 +63,7 @@ namespace Character.Movement {
 
         private void RefreshMovement()
         {
-            m_tempDestination = m_boundsMovement.GetRandomPosition();
+            m_tempDestination = m_boundsMovement.GetRandomPositionV2();
             m_tempInterval = Random.Range(m_changeIntervalMin, m_changeIntervalMax);
             m_tempSpeed = (m_movementSpeed + Random.Range(m_speedVariationDecrement, m_speedVariationIncrement));
 
