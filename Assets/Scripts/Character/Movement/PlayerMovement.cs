@@ -15,11 +15,6 @@ namespace Character.Movement {
             SetInputObservers();
         }
 
-        protected override void SafelyStopMovementComponents() {
-            LogUtil.PrintInfo(this, GetType(), "SafelyStopExtraComponents()...");
-            //TODO code stoppage of extras here
-        }
-
         private void SetInputObservers() {
             this.FixedUpdateAsObservable()
                 .Select(_ => Input.GetAxis("Horizontal"))

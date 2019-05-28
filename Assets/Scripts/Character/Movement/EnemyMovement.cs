@@ -25,8 +25,6 @@ namespace Character.Movement {
 
         [Inject] readonly BoundsModel.IGetter m_boundsMovement;
 
-        private bool m_isObservingCollisions = true;
-        private bool m_isMoving = true;
         private float m_currentTime;
 
         private float m_tempSpeed;
@@ -35,8 +33,6 @@ namespace Character.Movement {
 
         private void Start() {
             this.FixedUpdateAsObservable()
-                .Select(_ => m_isMoving)
-                .Where(shouldMove => shouldMove)
                 .Subscribe(_ => {
                     if (m_currentTime >= m_tempInterval) {
                         RefreshMovement();
@@ -54,26 +50,19 @@ namespace Character.Movement {
 
         private void SetCollisionRefreshObserver() {
             this.OnCollisionEnter2DAsObservable()
-                .Where(otherCollision2D => m_isObservingCollisions &&
-                    (TagLayerUtil.IsEqual(otherCollision2D.gameObject.tag, GameTags.Bounds) ||
-                    TagLayerUtil.IsEqual(otherCollision2D.gameObject.tag, GameTags.NPC)))
+                .Where(otherCollision2D =>
+                    TagLayerUtil.IsEqual(otherCollision2D.gameObject.tag, GameTags.Bounds) ||
+                    TagLayerUtil.IsEqual(otherCollision2D.gameObject.tag, GameTags.NPC))
                 .Subscribe(_ => RefreshMovement())
                 .AddTo(this);
         }
 
-        private void RefreshMovement()
-        {
+        private void RefreshMovement() {
             m_tempDestination = m_boundsMovement.GetRandomPositionV2();
             m_tempInterval = Random.Range(m_changeIntervalMin, m_changeIntervalMax);
             m_tempSpeed = (m_movementSpeed + Random.Range(m_speedVariationDecrement, m_speedVariationIncrement));
 
             m_currentTime = 0f;
-        }
-
-        protected override void SafelyStopMovementComponents()
-        {
-            m_isMoving = false;
-            m_isObservingCollisions = false;
         }
 
     }

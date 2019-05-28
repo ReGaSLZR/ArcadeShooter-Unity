@@ -11,15 +11,12 @@ namespace Character.Movement {
 
 		protected Rigidbody2D m_rigidBody2D;
 
-        protected abstract void SafelyStopMovementComponents();
-
 		private void Awake() {
 			m_rigidBody2D = GetComponent<Rigidbody2D>();
 		}
 
 		public void StopMoving() {
 			LogUtil.PrintInfo(this, this.GetType(), "StopMoving() called.");
-            SafelyStopMovementComponents();
             Destroy(this);
 		}
 			
