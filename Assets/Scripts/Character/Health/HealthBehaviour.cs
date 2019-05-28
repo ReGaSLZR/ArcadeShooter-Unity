@@ -10,41 +10,32 @@ namespace Character.Health {
 		[Tooltip("Changes to health value will only apply on game restart.")]
 		[Range(1, 99)]
 		[SerializeField] protected int m_health = 1;
-		[SerializeField] protected GameObject m_childMain;
+		[SerializeField] protected GameObject[] m_prefabFXKilled;
 
-		[Space]
-		[SerializeField] protected GameObject m_childFXKilled;
-		[Range(0f, 10f)]
-		[SerializeField] protected float m_fxDuration = 0f;
-
-		protected Collider2D m_collider2D;
 		public ReactiveProperty<bool> m_reactiveIsDead { get; private set; }
 
 		public abstract void ApplyDamage();
 
 		private void Awake() {
 			m_reactiveIsDead = new ReactiveProperty<bool>(false);
-			m_collider2D = GetComponent<Collider2D>();
-
-			if(m_childMain == null) {
-				LogUtil.PrintError(this, this.GetType(), 
-					"Child Main cannot be NULL.");
-				return;
-			}
 		}
 
 		private void Start() {
 			this.UpdateAsObservable ()
 				.Select(_ => m_health)
 				.Where(health => (health == 0))
-				.Subscribe(m_health => m_reactiveIsDead.Value = true)
+				.Subscribe(m_health => {
+                    ActivateFX();
+                    m_reactiveIsDead.Value = true;
+                })
 				.AddTo(this);
 		}
 
-		protected void ActivateFX() {
-			if (m_childFXKilled != null) {
-				m_childMain.SetActive (false);
-				m_childFXKilled.SetActive (true);
+		private void ActivateFX() {
+            m_health = -1; //to prevent another call to this method
+
+			if (m_prefabFXKilled.Length > 0) {
+                Instantiate(m_prefabFXKilled[Random.Range(0, m_prefabFXKilled.Length-1)], transform.position, transform.rotation);
 			} else {
 				LogUtil.PrintInfo(this, this.GetType(), 
 					"ActivateFX() Sorry, no Kill FX set.");

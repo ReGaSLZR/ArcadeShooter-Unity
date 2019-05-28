@@ -15,10 +15,8 @@ namespace Character.Health {
 		}
 
 		private IEnumerator CorKill() {
-			ActivateFX();
-			m_collider2D.isTrigger = true;
-
-			yield return new WaitForSeconds(m_fxDuration);
+            //wait for one frame to allow listeners of health value to react
+            yield return null;
 			Destroy(this.gameObject);
 		}
 
