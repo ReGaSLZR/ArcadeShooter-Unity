@@ -34,7 +34,9 @@ public enum GameTags {
 	Enemy,
 
 	Player, 
-	PlayerShielded
+	PlayerShielded,
+
+    FX
 
 }
 
