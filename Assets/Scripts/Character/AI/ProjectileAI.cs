@@ -1,6 +1,4 @@
-﻿using Character;
-using UnityEngine;
-using UniRx;
+﻿using UniRx;
 using UniRx.Triggers;
 
 namespace Character.AI {
@@ -22,7 +20,7 @@ namespace Character.AI {
 		}
 
 		private void Start() {
-			m_targetDetector.m_isTargetDetected
+            m_targetDetector.m_isTargetDetected
 				.Where(isDetected => isDetected)
 				.Subscribe(m_targetDetector => {
 					m_skillDefault.UseSkill();

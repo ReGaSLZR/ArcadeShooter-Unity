@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 114983842491313072}
   - component: {fileID: 114888139377091910}
   - component: {fileID: 114760283821123448}
+  - component: {fileID: 114592062306401612}
   m_Layer: 8
   m_Name: SampBullet
   m_TagString: Projectile
@@ -169,6 +170,18 @@ MonoBehaviour:
   m_poofDuration: 1
   m_childMain: {fileID: 4020000128160802}
   m_childFXPoof: {fileID: 4866373164837166}
+--- !u!114 &114592062306401612
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1886513095258318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0890878b760a9b4e888fdac61656bc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_movementSpeed: 5
 --- !u!114 &114760283821123448
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -208,7 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_aim: {fileID: 0}
-  m_movement: {fileID: 0}
+  m_movement: {fileID: 114592062306401612}
   m_health: {fileID: 0}
   m_targetDetector: {fileID: 114760283821123448}
   m_skillDefault: {fileID: 114888139377091910}

@@ -1,16 +1,15 @@
-﻿using Character;
-using Character.Health;
+﻿using Character.Health;
+using Character.Movement;
 using Character.Skill;
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 
 namespace Character.AI {
 
 	public abstract class AIBehaviour : MonoBehaviour {
 
 		[SerializeField] protected Aim m_aim;
-		[SerializeField] protected Movement m_movement;
+		[SerializeField] protected MovementBehaviour m_movement;
 		[Space]
 		[SerializeField] protected HealthBehaviour m_health;
 		[Space]

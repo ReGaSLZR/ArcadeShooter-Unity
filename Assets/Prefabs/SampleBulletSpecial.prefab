@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 114901974365543776}
   - component: {fileID: 114117832972301208}
   - component: {fileID: 114447996075984364}
+  - component: {fileID: 114674943189388240}
   m_Layer: 8
   m_Name: SampleBulletSpecial
   m_TagString: Projectile
@@ -257,7 +258,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_targetTags: 0300000002000000
   m_isLockedToOne: 0
-  m_range: 13
+  m_range: 5
+--- !u!114 &114674943189388240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1861389245693712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0890878b760a9b4e888fdac61656bc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_movementSpeed: 5
 --- !u!114 &114901974365543776
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -270,7 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_aim: {fileID: 0}
-  m_movement: {fileID: 0}
+  m_movement: {fileID: 114674943189388240}
   m_health: {fileID: 0}
   m_targetDetector: {fileID: 114447996075984364}
   m_skillDefault: {fileID: 114117832972301208}
