@@ -9,18 +9,18 @@ namespace Character.Movement {
     public class EnemyMovement : MovementBehaviour
     {
 
-        [Range(-1f, -5f)]
+        [Range(-0.1f, -5f)]
         [SerializeField] private float m_speedVariationDecrement;
-        [Range(1f, 5f)]
+        [Range(0.1f, 5f)]
         [SerializeField] private float m_speedVariationIncrement;
 
         [Header("Destination Change")]
 
         [Tooltip("The MINIMUM time to wait before changing destination.")]
-        [Range(1f, 5f)]
+        [Range(0.1f, 15f)]
         [SerializeField] private float m_changeIntervalMin = 3f;
         [Tooltip("The MAXIMUM time to wait before changing destination.")]
-        [Range(5f, 10f)]
+        [Range(10f, 30f)]
         [SerializeField] private float m_changeIntervalMax = 10f;
 
         [Inject] readonly BoundsModel.IGetter m_boundsMovement;

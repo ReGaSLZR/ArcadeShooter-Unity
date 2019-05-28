@@ -87,7 +87,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1886513095258318}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.5, y: 0.6, z: 0}
+  m_LocalPosition: {x: -2.1948535, y: -0.40001225, z: 0}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_Children:
   - {fileID: 4020000128160802}
@@ -206,6 +206,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_targetDetector: {fileID: 114760283821123448}
   m_isDestroyedOnHit: 1
+  m_prefabFXOnDestroy: {fileID: 1420088154306968, guid: 5c0bfaf8a46981745895c962195fac9d,
+    type: 2}
 --- !u!114 &114983842491313072
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -24,20 +24,15 @@ namespace Character.Aim {
         private Vector3 m_cachedRandomAimPosition;
         private int m_tempRandomAimCalls = 0;
 
-        private void Awake() {
-            if(m_targetDetector == null) {
-                LogUtil.PrintError(this, this.GetType(), "Cannot have NULL target detector.");
-                Destroy(this);
-            }
-        }
-
         private void Start() {
-            m_targetDetector.m_isTargetDetected
-                .Subscribe(hasTarget => {
-                    m_cachedTarget = hasTarget ? 
-                        m_targetDetector.m_targets[0].gameObject : null;
-                })
-                .AddTo(this);
+            if(m_targetDetector != null) {
+                m_targetDetector.m_isTargetDetected
+                    .Subscribe(hasTarget => {
+                        m_cachedTarget = hasTarget ?
+                            m_targetDetector.m_targets[0].gameObject : null;
+                    })
+                    .AddTo(this);
+            }
 
             this.UpdateAsObservable()
                 .Select(_ => m_cachedTarget)
