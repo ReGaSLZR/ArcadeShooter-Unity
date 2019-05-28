@@ -17,7 +17,7 @@ namespace Character.Skill {
 			}
 		}
 
-		public override void UseSkill() {
+        protected override void ExecuteUseSkill() {
 			foreach(HealthBehaviour killable in GetKillables()) {
 				killable.ApplyDamage();
 			}
@@ -42,7 +42,6 @@ namespace Character.Skill {
 
 			return killables;
 		}
-
-	}
+    }
 
 }
