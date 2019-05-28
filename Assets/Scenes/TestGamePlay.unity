@@ -122,7 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 40009212}
   - component: {fileID: 40009215}
-  - component: {fileID: 40009216}
+  - component: {fileID: 40009214}
   - component: {fileID: 40009213}
   - component: {fileID: 40009211}
   m_Layer: 8
@@ -178,6 +178,21 @@ MonoBehaviour:
   m_skillDefault: {fileID: 1718883800}
   m_skillSpecial: {fileID: 1604002291}
   m_skillInterval: 0.5
+--- !u!58 &40009214
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 40009210}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 3.8
 --- !u!50 &40009215
 Rigidbody2D:
   serializedVersion: 4
@@ -198,31 +213,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &40009216
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 40009210}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 8.5, y: 8.5}
-    newSize: {x: 8.5, y: 8.5}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 8.5, y: 8.5}
-  m_EdgeRadius: 0
 --- !u!1 &130429983
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,7 +1037,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_force: 700
-  m_spawnOwnerCollider2D: {fileID: 40009216}
+  m_spawnOwnerCollider2D: {fileID: 0}
   m_childSpawnPoint: {fileID: 1395944359}
   m_prefabProjectile: {fileID: 1861389245693712, guid: a4cef5ace0bdbc84685f4d07a29641d6,
     type: 2}
@@ -1133,7 +1123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_force: 700
-  m_spawnOwnerCollider2D: {fileID: 40009216}
+  m_spawnOwnerCollider2D: {fileID: 0}
   m_childSpawnPoint: {fileID: 1395944359}
   m_prefabProjectile: {fileID: 1934047486064286, guid: 252fcf1b76d0382418b5c902e7a18d25,
     type: 2}
