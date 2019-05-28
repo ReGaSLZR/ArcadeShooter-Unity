@@ -8,12 +8,8 @@ namespace Character.Aim
     public class PlayerAim : AimBehaviour
     {
 
-        private bool m_isAiming = true;
-
         private void Start() {
             this.UpdateAsObservable()
-                .Select(_ => m_isAiming)
-                .Where(isAiming => isAiming)
                 .Subscribe(_ => {
                     transform.up = GetMouseDirection();
                 })
@@ -29,9 +25,6 @@ namespace Character.Aim
             );
         }
 
-        protected override void SafelyStopAimingComponents() {
-            m_isAiming = false;
-        }
     }
 
 }

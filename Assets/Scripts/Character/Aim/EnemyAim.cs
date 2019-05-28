@@ -14,7 +14,9 @@ namespace Character.Aim {
         [Space]
         [Tooltip("The number of calls before random aiming is refreshed.")]
         [Range(100, 1000)]
-        [SerializeField] private int m_randomAimingRefresh = 200;
+        [SerializeField] private int m_randomAimRefresh = 200;
+        [Range(0f, 100f)]
+        [SerializeField] private float m_aimSpeed = 1f;
 
         [Inject] readonly BoundsModel.IGetter m_boundsModel;
 
@@ -32,7 +34,8 @@ namespace Character.Aim {
         private void Start() {
             m_targetDetector.m_isTargetDetected
                 .Subscribe(hasTarget => {
-                    m_cachedTarget = hasTarget ? m_targetDetector.m_targets[0].gameObject : null;
+                    m_cachedTarget = hasTarget ? 
+                        m_targetDetector.m_targets[0].gameObject : null;
                 })
                 .AddTo(this);
 
@@ -59,7 +62,7 @@ namespace Character.Aim {
         private void RandomAim() {
             //LogUtil.PrintInfo(this, this.GetType(), "Randomly aiming...");
 
-            if (m_tempRandomAimCalls >= m_randomAimingRefresh) {
+            if (m_tempRandomAimCalls >= m_randomAimRefresh) {
                 m_tempRandomAimCalls = 0;
                 Vector2 randomAim = m_boundsModel.GetRandomPosition();
                 m_cachedRandomAimPosition = new Vector3(randomAim.x, randomAim.y, 0);
@@ -69,16 +72,12 @@ namespace Character.Aim {
             }
 
             transform.rotation = Quaternion.Lerp(transform.rotation, 
-                Quaternion.Euler(0f, 0f, GetRotationAngle(m_cachedRandomAimPosition)), Time.deltaTime);
+                Quaternion.Euler(0f, 0f, GetRotationAngle(m_cachedRandomAimPosition)), Time.deltaTime * m_aimSpeed);
         }
 
         private float GetRotationAngle(Vector3 targetPosition) {
             Vector3 newPosition = (targetPosition - transform.position);
             return Mathf.Atan2(newPosition.y, newPosition.x) * Mathf.Rad2Deg;
-        }
-
-        protected override void SafelyStopAimingComponents() {
-
         }
 
     }
