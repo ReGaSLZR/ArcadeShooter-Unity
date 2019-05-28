@@ -196,7 +196,7 @@ CircleCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1861389245693712}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -256,9 +256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e085f83ab549e574a9cf91ac0b809aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_targetTags: 0300000002000000
+  m_targetTags: 030000000200000001000000
   m_isLockedToOne: 0
-  m_range: 5
+  m_range: 2.5
 --- !u!114 &114674943189388240
 MonoBehaviour:
   m_ObjectHideFlags: 1

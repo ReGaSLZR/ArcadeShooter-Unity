@@ -166,10 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afd2bb03b8c0c6846845de80e9d13cc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_lifeDuration: 2
-  m_poofDuration: 1
-  m_childMain: {fileID: 4020000128160802}
-  m_childFXPoof: {fileID: 4866373164837166}
+  m_lifeDuration: 3
 --- !u!114 &114592062306401612
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -193,7 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e085f83ab549e574a9cf91ac0b809aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_targetTags: 0300000002000000
+  m_targetTags: 00000000
   m_isLockedToOne: 1
   m_range: 5
 --- !u!114 &114888139377091910
