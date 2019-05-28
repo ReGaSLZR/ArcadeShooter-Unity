@@ -1,5 +1,4 @@
 ﻿using UniRx;
-using UniRx.Triggers;
 
 namespace Character.AI {
 
@@ -31,7 +30,6 @@ namespace Character.AI {
 		protected override void SafelyStopExtraComponents() {
 			LogUtil.PrintInfo(this, this.GetType(), "No extra components to stop.");
 		}
-
 			
 	}
 

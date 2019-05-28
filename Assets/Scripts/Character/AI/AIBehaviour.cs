@@ -1,4 +1,5 @@
-﻿using Character.Health;
+﻿using Character.Aim;
+using Character.Health;
 using Character.Movement;
 using Character.Skill;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace Character.AI {
 
 	public abstract class AIBehaviour : MonoBehaviour {
 
-		[SerializeField] protected Aim m_aim;
+		[SerializeField] protected AimBehaviour m_aim;
 		[SerializeField] protected MovementBehaviour m_movement;
 		[Space]
 		[SerializeField] protected HealthBehaviour m_health;
@@ -22,8 +23,9 @@ namespace Character.AI {
 			m_health.m_reactiveIsDead
 				.Where(isDead => isDead)
 				.Subscribe(_ => {
-					SafelyStopComponents(); 
-					SafelyStopExtraComponents();
+                    SafelyStopExtraComponents();
+                    SafelyStopComponents();
+                    Destroy(this.gameObject);
 				})
 				.AddTo(this);
 		}
@@ -37,7 +39,12 @@ namespace Character.AI {
 				m_aim.StopAiming();
 			}
 
-			if(m_targetDetector != null) {
+
+            if (m_skillDefault != null) {
+                m_skillDefault.StopSkill();
+            }
+
+            if (m_targetDetector != null) {
 				Destroy(m_targetDetector);
 			}
 		}

@@ -28,9 +28,8 @@ namespace Character.AI {
 		}
 
 		protected override void SafelyStopExtraComponents() {
-			if(m_skillSpecial != null) {
-				Destroy(m_skillSpecial);	
-			}
+            m_skillSpecial.StopSkill();
+			Destroy(m_skillSpecial);	
 		}
 
 		private void SetSkillObservers() {
