@@ -11,7 +11,7 @@ namespace Character.Movement {
             SetInputObservers();
         }
 
-        protected override void SafelyStopExtraComponents() {
+        protected override void SafelyStopMovementComponents() {
             LogUtil.PrintInfo(this, GetType(), "SafelyStopExtraComponents()...");
             //TODO code stoppage of extras here
         }

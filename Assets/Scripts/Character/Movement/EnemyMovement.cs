@@ -67,7 +67,7 @@ namespace Character.Movement {
             m_currentTime = 0f;
         }
 
-        protected override void SafelyStopExtraComponents()
+        protected override void SafelyStopMovementComponents()
         {
             m_isMoving = false;
             m_isObservingCollisions = false;

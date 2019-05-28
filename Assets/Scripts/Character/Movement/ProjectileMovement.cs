@@ -1,7 +1,6 @@
 ﻿using UniRx;
 using UniRx.Triggers;
 
-
 namespace Character.Movement {
 
     public class ProjectileMovement : MovementBehaviour
@@ -18,7 +17,7 @@ namespace Character.Movement {
             .AddTo(this);
         }
 
-        protected override void SafelyStopExtraComponents() {
+        protected override void SafelyStopMovementComponents() {
             m_isObservingCollisions = false;
         }
 
