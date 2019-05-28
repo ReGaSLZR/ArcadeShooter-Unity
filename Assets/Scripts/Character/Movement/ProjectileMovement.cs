@@ -9,11 +9,16 @@ namespace Character.Movement {
         private bool m_isObservingCollisions = true;
 
         private void Start() {
+            SetBoundsCollisionObserver();
+        }
+
+        private void SetBoundsCollisionObserver() {
             this.OnCollisionEnter2DAsObservable()
-            .Where(otherCollision2D => m_isObservingCollisions && TagLayerUtil.IsUntagged(otherCollision2D.gameObject.tag))
-            .Subscribe(_ => {
-                Destroy(this.gameObject);
-            })
+                .Where(otherCollision2D => m_isObservingCollisions &&
+                    TagLayerUtil.IsEqual(otherCollision2D.gameObject.tag, GameTags.Bounds))
+                .Subscribe(_ => {
+                    Destroy(this.gameObject);
+                })
             .AddTo(this);
         }
 

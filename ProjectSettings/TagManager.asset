@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - PlayerShielded
   - FX
+  - Bounds
   layers:
   - Default
   - TransparentFX

@@ -2,6 +2,10 @@
 
 public class TagLayerUtil {
 
+    public static bool IsEqual(string objectTag, GameTags gameTag) {
+        return objectTag.Equals(gameTag.ToString());
+    }
+
 	public static bool IsUntagged(string tag) {
 		return tag.Equals(GameTags.Untagged.ToString());
 	}
@@ -36,7 +40,9 @@ public enum GameTags {
 	Player, 
 	PlayerShielded,
 
-    FX
+    FX,
+
+    Bounds
 
 }
 

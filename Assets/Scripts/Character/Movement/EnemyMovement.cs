@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using Zenject;
-using Injection.Model;
+﻿using Injection.Model;
+using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Zenject;
 
 namespace Character.Movement {
 
@@ -43,18 +43,21 @@ namespace Character.Movement {
                     }
                     else {
                         m_currentTime += Time.fixedDeltaTime;
-                        m_rigidBody2D.MovePosition(Vector2.MoveTowards(transform.position, m_tempDestination, m_tempSpeed * Time.fixedDeltaTime));
+                        m_rigidBody2D.MovePosition(Vector2.MoveTowards(
+                            transform.position, m_tempDestination, m_tempSpeed * Time.fixedDeltaTime));
                     }
                 })
                 .AddTo(this);
 
+            SetCollisionRefreshObserver();
+        }
+
+        private void SetCollisionRefreshObserver() {
             this.OnCollisionEnter2DAsObservable()
-                .Where(otherCollision2D => m_isObservingCollisions && 
-                    ((TagLayerUtil.IsUntagged(otherCollision2D.gameObject.tag)) || 
-                    otherCollision2D.gameObject.tag.Equals(GameTags.NPC)))
-                .Subscribe(_ => {
-                    RefreshMovement();
-                })
+                .Where(otherCollision2D => m_isObservingCollisions &&
+                    (TagLayerUtil.IsEqual(otherCollision2D.gameObject.tag, GameTags.Bounds) ||
+                    TagLayerUtil.IsEqual(otherCollision2D.gameObject.tag, GameTags.NPC)))
+                .Subscribe(_ => RefreshMovement())
                 .AddTo(this);
         }
 
