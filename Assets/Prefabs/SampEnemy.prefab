@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114737927709462876}
   m_Layer: 8
   m_Name: Aim
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 212276047782995744}
   m_Layer: 8
   m_Name: ProjectileSpawnPoint
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
