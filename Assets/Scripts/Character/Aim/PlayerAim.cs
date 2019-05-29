@@ -10,6 +10,8 @@ namespace Character.Aim
 
         private void Start() {
             this.UpdateAsObservable()
+                .Select(_ => Time.timeScale)
+                .Where(timeScale => (timeScale > 0))
                 .Subscribe(_ => {
                     transform.up = GetMouseDirection();
                 })
