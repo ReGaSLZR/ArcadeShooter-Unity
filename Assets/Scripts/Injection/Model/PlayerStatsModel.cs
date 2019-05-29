@@ -12,14 +12,9 @@ namespace Injection.Model {
     {
 
         public interface IShop {
-            bool IncreaseHealthByOne();
-            bool IsHealthMaxCap();
-
+            bool IncreaseHealthByOne();   
             bool IncreaseShieldByTen();
-            bool IsShieldMaxCap();
-
             bool IncreaseRocketsMaxByOne();
-            bool IsRocketMaxCap();
             void RefillRockets();
 
             bool DeductCoinsBy(int coins);
@@ -27,9 +22,15 @@ namespace Injection.Model {
 
         public interface IStatGetter {
             ReactiveProperty<int> GetHealth();
+            bool IsHealthMaxCap();
+
             ReactiveProperty<int> GetShield();
+            bool IsShieldMaxCap();
             ReactiveProperty<int> GetShieldRegen();
+
             ReactiveProperty<int> GetRockets();
+            bool IsRocketMaxCap();
+
             ReactiveProperty<int> GetScore();
             ReactiveProperty<int> GetCoins();
         }
@@ -72,7 +73,7 @@ namespace Injection.Model {
             m_reactiveHealth = new ReactiveProperty<int>(MAX_HEALTH);
             m_reactiveRockets = new ReactiveProperty<int>(m_currentMaxSpecialRockets);
             m_reactiveShield = new ReactiveProperty<int>(m_currentMaxShield);
-            m_reactiveShieldRegen = new ReactiveProperty<int>(MAX_SHIELD_REGEN_TICK);
+            m_reactiveShieldRegen = new ReactiveProperty<int>(0);
 
             m_reactiveScore = new ReactiveProperty<int>(0);
             m_reactiveCoins = new ReactiveProperty<int>(0);
@@ -117,8 +118,16 @@ namespace Injection.Model {
             return m_reactiveHealth;
         }
 
+        public bool IsHealthMaxCap() {
+            return (m_reactiveHealth.Value == MAX_HEALTH);
+        }
+
         public ReactiveProperty<int> GetShield() {
             return m_reactiveShield;
+        }
+
+        public bool IsShieldMaxCap() {
+            return (m_currentMaxShield == MAX_SHIELD);
         }
 
         public ReactiveProperty<int> GetShieldRegen() {
@@ -127,6 +136,10 @@ namespace Injection.Model {
 
         public ReactiveProperty<int> GetRockets() {
             return m_reactiveRockets;
+        }
+
+        public bool IsRocketMaxCap() {
+            return (m_currentMaxSpecialRockets == MAX_ROCKETS);
         }
 
         public ReactiveProperty<int> GetScore() {
@@ -155,7 +168,7 @@ namespace Injection.Model {
 
         #endregion
 
-        #region IShop
+        #region IShop functions
 
         public bool IncreaseHealthByOne() {
             if(m_reactiveHealth.Value < MAX_HEALTH) {
@@ -164,10 +177,6 @@ namespace Injection.Model {
             }
 
             return false;
-        }
-
-        public bool IsHealthMaxCap() {
-            return (m_reactiveHealth.Value == MAX_HEALTH);
         }
 
         public bool IncreaseShieldByTen() {
@@ -181,10 +190,6 @@ namespace Injection.Model {
             return false;
         }
 
-        public bool IsShieldMaxCap() {
-            return (m_currentMaxShield == MAX_SHIELD);
-        }
-
         public bool IncreaseRocketsMaxByOne() {
             if(!IsRocketMaxCap()) {
                 m_currentMaxSpecialRockets++;
@@ -192,10 +197,6 @@ namespace Injection.Model {
             }
 
             return false;
-        }
-
-        public bool IsRocketMaxCap() {
-            return (m_currentMaxSpecialRockets == MAX_ROCKETS);
         }
 
         public void RefillRockets() {
