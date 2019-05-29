@@ -24,6 +24,10 @@ namespace Character.Health {
             }
         }
 
+        protected override void OnDeath() {
+            LogUtil.PrintInfo(this, GetType(), "Player is dead.");
+        }
+
     }
 
 }

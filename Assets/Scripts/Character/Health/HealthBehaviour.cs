@@ -17,9 +17,10 @@ namespace Character.Health {
         [Inject] protected readonly FXModel.IGetter m_fxModel;
         [Inject] protected readonly Injection.Instantiator m_instantiator;
 
-        protected ReactiveProperty<bool> m_reactiveIsDead;
+        private ReactiveProperty<bool> m_reactiveIsDead;
 
         protected abstract void ApplyDamageTick();
+        protected abstract void OnDeath();
 
         public void ApplyDamage() {
             if(m_health <= 0) {
@@ -44,19 +45,20 @@ namespace Character.Health {
             }
         }
 
-        protected void ActivateDamageFX() {
+        private void ActivateDamageFX() {
             LogUtil.PrintInfo(this, GetType(), "ActivateDamageFX()");
             m_instantiator.InstantiateInjectPrefab(m_fxModel.GetRandomFXDamage(), this.gameObject);
         }
 
-        protected void ActivateDeathFX() {
+        private void ActivateDeathFX() {
             LogUtil.PrintInfo(this, GetType(), "ActivateDeathFX()");
             m_instantiator.InstantiateInjectPrefab(m_fxModel.GetRandomFXDeath(m_fxDeath), this.gameObject);
         }
 
-        protected IEnumerator CorKill() {
+        private IEnumerator CorKill() {
             LogUtil.PrintInfo(this, GetType(), "CorKill()");
             ActivateDeathFX();
+            OnDeath();
             m_reactiveIsDead.Value = true;
 
             //wait for one frame to allow listeners of health value to react

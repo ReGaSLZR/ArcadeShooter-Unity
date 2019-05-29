@@ -6,7 +6,7 @@ namespace Injection.Model {
     public class PlayerStatsModel : MonoBehaviour, 
         PlayerStatsModel.IStatSetter,
         PlayerStatsModel.IStatGetter,
-        PlayerStatsModel.ICoinsSetter,
+        PlayerStatsModel.ICoinSetter,
         PlayerStatsModel.IScoreSetter,
         PlayerStatsModel.IShop
     {
@@ -41,7 +41,7 @@ namespace Injection.Model {
             bool UseRocket();
         }
 
-        public interface ICoinsSetter {
+        public interface ICoinSetter {
             void IncreaseCoinsBy(int coins);
         }
 

@@ -34,7 +34,7 @@ namespace Injection {
 
             Container.Bind<PlayerStatsModel.IStatSetter>().FromInstance(m_playerStatsModel);
             Container.Bind<PlayerStatsModel.IStatGetter>().FromInstance(m_playerStatsModel);
-            Container.Bind<PlayerStatsModel.ICoinsSetter>().FromInstance(m_playerStatsModel);
+            Container.Bind<PlayerStatsModel.ICoinSetter>().FromInstance(m_playerStatsModel);
             Container.Bind<PlayerStatsModel.IScoreSetter>().FromInstance(m_playerStatsModel);
             Container.Bind<PlayerStatsModel.IShop>().FromInstance(m_playerStatsModel);
 

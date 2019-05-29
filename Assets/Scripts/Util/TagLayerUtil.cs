@@ -15,6 +15,10 @@ public class TagLayerUtil {
 			tag.Equals(GameTags.PlayerShielded.ToString()));
 	}
 
+    public static bool IsEligibleForPlayerScoring(bool isPlayerProjectile, string targetTag) {
+        return (isPlayerProjectile && (targetTag.Equals(GameTags.Enemy.ToString())));
+    }
+
 	public static bool IsLayerInteractor(int layer) {
 		return (layer == LayerMask.NameToLayer (GameLayers.Interactor.ToString()));
 	}

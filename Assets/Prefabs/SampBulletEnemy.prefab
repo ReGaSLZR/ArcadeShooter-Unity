@@ -41,7 +41,6 @@ GameObject:
   - component: {fileID: 114382515895320008}
   - component: {fileID: 114659844594971460}
   - component: {fileID: 114278389735229226}
-  - component: {fileID: 114542178196277496}
   m_Layer: 8
   m_Name: SampBulletEnemy
   m_TagString: Projectile
@@ -181,22 +180,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_aim: {fileID: 0}
-  m_movement: {fileID: 114542178196277496}
+  m_movement: {fileID: 0}
   m_health: {fileID: 0}
   m_targetDetector: {fileID: 114278389735229226}
   m_skillDefault: {fileID: 114659844594971460}
---- !u!114 &114542178196277496
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1317940163988012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0890878b760a9b4e888fdac61656bc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_movementSpeed: 5
+  m_isFromPlayer: 0
+  m_onHitScoreValue: 0
 --- !u!114 &114659844594971460
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3619,7 +3608,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1669494567
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: d3f17daa39877af4caaef53d3b02201f, type: 3}
   m_Color: {r: 0.5, g: 0.38235295, b: 0.07352942, a: 1}
