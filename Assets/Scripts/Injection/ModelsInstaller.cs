@@ -9,6 +9,10 @@ namespace Injection {
         [SerializeField] private BoundsModel m_boundsModel;
         [SerializeField] private FXModel m_fxModel;
 
+        [Space]
+
+        [SerializeField] private PlayerStatsModel m_playerStatsModel;
+
         public void InjectGameObject(GameObject gameObject) {
             Container.InjectGameObject(gameObject);
         }
@@ -24,8 +28,12 @@ namespace Injection {
 
         public override void InstallBindings() {
             Container.Bind<Instantiator>().FromInstance(this);
+
             Container.Bind<BoundsModel.IGetter>().FromInstance(m_boundsModel);
             Container.Bind<FXModel.IGetter>().FromInstance(m_fxModel);
+
+            Container.Bind<PlayerStatsModel.IGetter>().FromInstance(m_playerStatsModel);
+            Container.Bind<PlayerStatsModel.ISetter>().FromInstance(m_playerStatsModel);
         }
 
     }

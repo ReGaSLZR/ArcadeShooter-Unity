@@ -20,9 +20,10 @@ namespace Character.AI {
 		protected abstract void SafelyStopExtraComponents();
 
 		private void Start() {
-			m_health.m_reactiveIsDead
+			m_health.GetReactiveIsDead()
 				.Where(isDead => isDead)
 				.Subscribe(_ => {
+                    LogUtil.PrintInfo(this, GetType(), "Character is dead.");
                     SafelyStopExtraComponents();
                     SafelyStopComponents();
                     Destroy(this.gameObject);
