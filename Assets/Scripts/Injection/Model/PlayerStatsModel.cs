@@ -10,7 +10,7 @@ namespace Injection.Model {
         PlayerStatsModel.IScoreSetter,
         PlayerStatsModel.IShop
     {
-
+        #region Interfaces
         public interface IShop {
             bool IncreaseHealthByOne();   
             bool IncreaseShieldByTen();
@@ -48,7 +48,7 @@ namespace Injection.Model {
         public interface IScoreSetter {
             void IncreaseScoreBy(int score);
         }
-
+        #endregion
 
         private const int MAX_HEALTH = 3;
         private const int MAX_SHIELD = 100;
