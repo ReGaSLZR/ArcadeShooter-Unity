@@ -18,6 +18,7 @@ namespace UI
         [Header("Old Score")]
         [SerializeField] private Image m_panelOldHighScore;
         [SerializeField] private TextMeshProUGUI m_textOldHighScore;
+        [SerializeField] private TextMeshProUGUI m_textOldHighScorePlayer;
 
         [Header("New High Score")]
         [SerializeField] private Image m_panelNewHighScore;
@@ -35,7 +36,7 @@ namespace UI
 
         private void Start() {
             m_textOldHighScore.text = m_playerPrefsGetter.GetHighScore().ToString();
-
+            m_textOldHighScorePlayer.text = m_playerPrefsGetter.GetHighScorePlayerName();
             ActivatePanelOldHighScore();
 
             SetObservables();
@@ -69,9 +70,6 @@ namespace UI
 
                     if (CalculateTotalScore() > m_playerPrefsGetter.GetHighScore()) {
                         ActivatePanelNewHighScore();
-                    }
-                    else {
-                        ActivatePanelOldHighScore();
                     }
                 })
                 .AddTo(this);
