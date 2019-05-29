@@ -4,10 +4,11 @@ using Zenject;
 
 namespace Injection {
 
-    public class ModelsInstaller : MonoInstaller<ModelsInstaller>, Instantiator {
+    public class GamePlayModelInstaller : MonoInstaller<GamePlayModelInstaller>, Instantiator {
 
         [SerializeField] private BoundsModel m_boundsModel;
         [SerializeField] private FXModel m_fxModel;
+        [SerializeField] private PlayerPrefsModel m_playerPrefsModel;
 
         [Space]
 
@@ -31,6 +32,9 @@ namespace Injection {
 
             Container.Bind<BoundsModel.IGetter>().FromInstance(m_boundsModel);
             Container.Bind<FXModel.IGetter>().FromInstance(m_fxModel);
+
+            Container.Bind<PlayerPrefsModel.IGetter>().FromInstance(m_playerPrefsModel);
+            Container.Bind<PlayerPrefsModel.ISetter>().FromInstance(m_playerPrefsModel);
 
             Container.Bind<PlayerStatsModel.IStatSetter>().FromInstance(m_playerStatsModel);
             Container.Bind<PlayerStatsModel.IStatGetter>().FromInstance(m_playerStatsModel);
