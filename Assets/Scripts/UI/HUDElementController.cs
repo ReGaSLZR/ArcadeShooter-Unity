@@ -7,7 +7,7 @@ using Zenject;
 
 namespace UI {
 
-    public class UIUpdater : MonoBehaviour
+    public class HUDElementController : MonoBehaviour
     {
 
         [SerializeField] HealthPanel m_healthPanel;
