@@ -1,8 +1,10 @@
 ﻿using Character.Skill;
+using Injection.Model;
 using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Zenject;
 
 namespace Character.AI {
 
@@ -13,7 +15,10 @@ namespace Character.AI {
 		[Range(0f, 10f)]
 		[SerializeField] private float m_skillInterval = 1f;
 
-		private DateTimeOffset m_lastFired;
+        [Inject] private readonly PlayerStatsModel.IStatGetter m_statsGetter;
+        [Inject] private readonly PlayerStatsModel.IStatSetter m_statsSetter;
+
+        private DateTimeOffset m_lastFired;
 
 		private void Awake() {
 			if((m_skillDefault == null) || ((m_skillSpecial == null))) {
@@ -47,12 +52,14 @@ namespace Character.AI {
 
 			this.UpdateAsObservable()
 				.Select(_ => Input.GetMouseButtonDown(1))
-				.Where(hasClickedMouse1 => hasClickedMouse1)
+				.Where(hasClickedMouse1 => hasClickedMouse1 && 
+                    (m_statsGetter.GetRockets().Value > 0))
 				.Timestamp()
 				.Where(timestamp => 
 					(timestamp.Timestamp > m_lastFired.AddSeconds(m_skillInterval)))
 				.Subscribe(timestamp => {
 					m_skillSpecial.UseSkill();
+                    m_statsSetter.UseRocket();
 					m_lastFired = timestamp.Timestamp;
 				})
 				.AddTo(this);

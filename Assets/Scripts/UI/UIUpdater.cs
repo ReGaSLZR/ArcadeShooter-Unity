@@ -37,6 +37,10 @@ namespace UI {
 
             m_stats.GetRockets()
                 .Subscribe(rockets => {
+                    if (rockets > m_sliderRocket.maxValue) {
+                        m_sliderRocket.maxValue = rockets;
+                    }
+
                     m_sliderRocket.value = rockets;
                     m_sliderRocketFeedback.enabled = (rockets == 0);
                 })
@@ -44,6 +48,10 @@ namespace UI {
 
             m_stats.GetShield()
                 .Subscribe(shield => {
+                    if (shield > m_sliderShield.maxValue) {
+                        m_sliderShield.maxValue = shield;
+                    }
+
                     m_sliderShield.value = shield;
                 })
                 .AddTo(this);
