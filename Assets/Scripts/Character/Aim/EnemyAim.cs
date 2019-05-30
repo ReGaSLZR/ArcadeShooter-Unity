@@ -12,13 +12,14 @@ namespace Character.Aim {
         [SerializeField] private TargetDetector m_targetDetector;
 
         [Space]
+
         [Tooltip("The number of calls before random aiming is refreshed.")]
         [Range(100, 1000)]
         [SerializeField] private int m_randomAimRefresh = 200;
         [Range(0f, 100f)]
         [SerializeField] private float m_aimSpeed = 1f;
 
-        [Inject] readonly BoundsModel.IGetter m_boundsModel;
+        [Inject] private readonly BoundsModel.IGetter m_boundsModel;
 
         private GameObject m_cachedTarget;
         private Vector3 m_cachedRandomAimPosition;
@@ -34,10 +35,14 @@ namespace Character.Aim {
                     .AddTo(this);
             }
 
+            SetAimLogic();
+        }
+
+        private void SetAimLogic() {
             this.UpdateAsObservable()
                 .Select(_ => m_cachedTarget)
                 .Subscribe(target => {
-                    if(target == null) {
+                    if (target == null) {
                         RandomAim();
                     }
                     else {

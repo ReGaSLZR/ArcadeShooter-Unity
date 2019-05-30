@@ -87,8 +87,7 @@ namespace Character {
 		}
 
 		private bool IsMatchingTag(Collider2D collider2D) {
-            if (m_ownerId == collider2D.GetInstanceID())
-            {
+            if (m_ownerId == collider2D.GetInstanceID()) {
                 return false;
             }
 

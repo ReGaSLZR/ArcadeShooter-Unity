@@ -987,15 +987,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_buttonNextRound: {fileID: 1842038579}
-  m_spawnInterval: 5
   m_spawnableCharacters:
   - m_prefabCharacter: {fileID: 1720132641804916, guid: b493e35aae3f5614bb89140e7568aeea,
       type: 2}
+    m_spawnInterval: 10
     m_spawnPerBatch: 1
     m_roundMin: 1
     m_roundMax: 99
   - m_prefabCharacter: {fileID: 1562994335073942, guid: c563a4c58968e2c41a75301426824fcc,
       type: 2}
+    m_spawnInterval: 5
     m_spawnPerBatch: 1
     m_roundMin: 1
     m_roundMax: 99
@@ -8242,7 +8243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0ce4b5f9c783cd45a5e73e418035183, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_countdownInSeconds: 10
+  m_countdownInSeconds: 60
 --- !u!114 &1627921648
 MonoBehaviour:
   m_ObjectHideFlags: 0

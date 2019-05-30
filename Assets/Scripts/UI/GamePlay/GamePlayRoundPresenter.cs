@@ -16,9 +16,6 @@ namespace UI.GamePlay {
         [SerializeField] private Button m_buttonNextRound;
 
         [Header("Spawning during a round")]
-        [Tooltip("Spawn interval in seconds.")]
-        [Range(1, 20)]
-        [SerializeField] private int m_spawnInterval;
         [SerializeField] private SpawnableCharacter[] m_spawnableCharacters;
 
         [Header("Pre-Countdown elements")]
@@ -49,8 +46,8 @@ namespace UI.GamePlay {
                 .AddTo(this);
 
             m_roundGetter.GetTimer()
-                .Where(timer => !m_playerStats.IsPlayerDead() && ((timer > 0) && ((timer % m_spawnInterval) == 0)))
-                .Subscribe(_ => TrySpawning())
+                .Where(timer => !m_playerStats.IsPlayerDead() && (timer > 0))
+                .Subscribe(timer => TrySpawning(timer))
                 .AddTo(this);
 
             StartCoroutine(CorPlayCutscene());
@@ -68,9 +65,9 @@ namespace UI.GamePlay {
                 .AddTo(this);
         }
 
-        private void TrySpawning() {
+        private void TrySpawning(int timer) {
             foreach(SpawnableCharacter spawnable in m_spawnableCharacters) {
-                if(spawnable.IsEligibleForRound(m_roundGetter.GetRoundNumber())) {
+                if(spawnable.IsEligible(timer, m_roundGetter.GetRoundNumber())) {
                     for(int x=0; x<(spawnable.m_spawnPerBatch
                         * m_roundGetter.GetRoundNumber()); x++) {
                             GameObject newCharacter = m_instantiator.InstantiateInjectPrefab(
