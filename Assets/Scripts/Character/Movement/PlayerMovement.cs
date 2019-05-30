@@ -10,6 +10,7 @@ namespace Character.Movement {
     {
 
         [Inject] readonly BoundsModel.IGetter m_boundsModel;
+        [Inject] readonly RoundModel.IGetter m_roundModel;
 
         private void Start() {
             SetInputObservers();
@@ -17,6 +18,7 @@ namespace Character.Movement {
 
         private void SetInputObservers() {
             this.FixedUpdateAsObservable()
+                .Where(_ => m_roundModel.GetTimer().Value > 0)
                 .Select(_ => Input.GetAxis("Horizontal"))
                 .Subscribe(x => {
                     Vector2 movement = Vector2.zero;
@@ -26,6 +28,7 @@ namespace Character.Movement {
                 .AddTo(this);
 
             this.FixedUpdateAsObservable()
+                .Where(_ => m_roundModel.GetTimer().Value > 0)
                 .Select(_ => Input.GetAxis("Vertical"))
                 .Subscribe(y => {
                     Vector2 movement = Vector2.zero;

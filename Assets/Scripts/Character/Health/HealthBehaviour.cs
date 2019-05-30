@@ -17,7 +17,7 @@ namespace Character.Health {
         [Inject] protected readonly FXModel.IGetter m_fxModel;
         [Inject] protected readonly Injection.Instantiator m_instantiator;
 
-        private ReactiveProperty<bool> m_reactiveIsDead;
+        public ReactiveProperty<bool> m_reactiveIsDead { get; private set; }
 
         protected abstract void ApplyDamageTick();
         protected abstract void OnDeath();
@@ -62,12 +62,8 @@ namespace Character.Health {
             m_reactiveIsDead.Value = true;
 
             //wait for one frame to allow listeners of health value to react
-            yield return null;
+            yield return new WaitForSeconds(0.5f);
             Destroy(this.gameObject);
-        }
-
-        public ReactiveProperty<bool> GetReactiveIsDead() {
-            return m_reactiveIsDead;
         }
 
 	}

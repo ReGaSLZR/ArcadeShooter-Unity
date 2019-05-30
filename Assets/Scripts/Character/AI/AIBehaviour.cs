@@ -19,16 +19,19 @@ namespace Character.AI {
 
 		protected abstract void SafelyStopExtraComponents();
 
-		private void Start() {
-			m_health.GetReactiveIsDead()
-				.Where(isDead => isDead)
-				.Subscribe(_ => {
-                    LogUtil.PrintInfo(this, GetType(), "Character is dead.");
-                    SafelyStopExtraComponents();
-                    SafelyStopComponents();
-                    Destroy(this.gameObject);
-				})
-				.AddTo(this);
+		protected virtual void Start() {
+            if(m_health != null) {
+                m_health.m_reactiveIsDead
+                    .Where(isDead => isDead)
+                    .Subscribe(_ => {
+                        LogUtil.PrintInfo(this, GetType(), "Character is dead.");
+                        SafelyStopExtraComponents();
+                        SafelyStopComponents();
+                        Destroy(this.gameObject);
+                    })
+                    .AddTo(this);
+            }
+
 		}
 
 		private void SafelyStopComponents() {

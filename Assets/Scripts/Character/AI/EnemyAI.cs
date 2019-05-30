@@ -17,7 +17,8 @@ namespace Character.AI {
 			}
 		}
 
-        private void Start() {
+        protected override void Start() {
+            base.Start();
             m_targetDetector.m_isTargetDetected
                 .Subscribe(hasTarget => {
                     if(hasTarget) {

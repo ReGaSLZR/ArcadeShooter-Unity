@@ -29,7 +29,8 @@ namespace Character.AI {
 			}
 		}
 
-		private void Start() {
+		protected override void Start() {
+            base.Start();
             SetBoundsCollisionObserver();
 
             m_targetDetector.m_isTargetDetected

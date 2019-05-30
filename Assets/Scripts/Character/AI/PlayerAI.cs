@@ -18,6 +18,9 @@ namespace Character.AI {
         [Inject] private readonly PlayerStatsModel.IStatGetter m_statsGetter;
         [Inject] private readonly PlayerStatsModel.IStatSetter m_statsSetter;
 
+        [Inject] private readonly RoundModel.IGetter m_roundGetter;
+        [Inject] private readonly RoundModel.ISetter m_roundSetter;
+
         private DateTimeOffset m_lastFired;
 
 		private void Awake() {
@@ -28,11 +31,14 @@ namespace Character.AI {
 			}
 		}
 
-		private void Start() {
-			SetSkillObservers();
-		}
+        protected override void Start() {
+            base.Start();
+            SetSkillObservers();
+        }
 
-		protected override void SafelyStopExtraComponents() {
+        protected override void SafelyStopExtraComponents() {
+            m_roundSetter.StopTimer();
+
             m_skillSpecial.StopSkill();
 			Destroy(m_skillSpecial);	
 		}
@@ -40,7 +46,7 @@ namespace Character.AI {
 		private void SetSkillObservers() {
 			this.UpdateAsObservable()
 				.Select(_ => Input.GetMouseButtonDown(0))
-				.Where(hasClickedMouse0 => hasClickedMouse0)
+				.Where(hasClickedMouse0 => hasClickedMouse0 && (m_roundGetter.GetTimer().Value > 0))
 				.Timestamp()
 				.Where(timestamp => 
 					(timestamp.Timestamp > m_lastFired.AddSeconds(m_skillInterval)))
@@ -53,7 +59,7 @@ namespace Character.AI {
 			this.UpdateAsObservable()
 				.Select(_ => Input.GetMouseButtonDown(1))
 				.Where(hasClickedMouse1 => hasClickedMouse1 && 
-                    (m_statsGetter.GetRockets().Value > 0))
+                    (m_statsGetter.GetRockets().Value > 0) && (m_roundGetter.GetTimer().Value > 0))
 				.Timestamp()
 				.Where(timestamp => 
 					(timestamp.Timestamp > m_lastFired.AddSeconds(m_skillInterval)))
