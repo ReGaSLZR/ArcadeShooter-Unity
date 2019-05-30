@@ -24,7 +24,6 @@ namespace Character.AI {
                 m_health.m_reactiveIsDead
                     .Where(isDead => isDead)
                     .Subscribe(_ => {
-                        LogUtil.PrintInfo(this, GetType(), "Character is dead.");
                         SafelyStopExtraComponents();
                         SafelyStopComponents();
                         Destroy(this.gameObject);

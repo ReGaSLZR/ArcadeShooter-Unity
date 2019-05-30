@@ -21,6 +21,8 @@ namespace Injection.Model {
         [SerializeField] private Transform m_parent;
         [SerializeField] private Transform[] m_spawnableLocations;
 
+        private int m_lastRandomLocationIndex;
+
         private void Awake() {
             if((m_parent == null) || (m_spawnableLocations.Length == 0)) {
                 LogUtil.PrintError(this, GetType(), "Cannot have " +
@@ -42,7 +44,14 @@ namespace Injection.Model {
         }
 
         public Transform GetRandomSpawnLocation() {
-            return m_spawnableLocations[Random.Range(0, m_spawnableLocations.Length - 1)];
+            int tempLocation = m_lastRandomLocationIndex;
+
+            while (tempLocation == m_lastRandomLocationIndex) {
+                tempLocation = Random.Range(0, m_spawnableLocations.Length - 1);
+            }
+
+            m_lastRandomLocationIndex = tempLocation;
+            return m_spawnableLocations[tempLocation];
         }
     }
 
