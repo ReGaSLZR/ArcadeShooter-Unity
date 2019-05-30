@@ -28,7 +28,7 @@ namespace UI.GamePlay {
         [SerializeField] TextMeshProUGUI m_textTimer;
 
         [Inject] readonly PlayerStatsModel.IStatGetter m_stats;
-        [Inject] readonly RoundModel.IGetter m_timer;
+        [Inject] readonly RoundModel.IGetter m_round;
 
         private void Start() {
             m_stats.GetHealth()
@@ -70,7 +70,8 @@ namespace UI.GamePlay {
                 .Subscribe(score => m_textScore.text = score.ToString())
                 .AddTo(this);
 
-            m_timer.GetTimer()
+            m_round.GetTimer()
+                .Where(countdown => (countdown >= 0))
                 .Subscribe(countdown => m_textTimer.text = countdown.ToString())
                 .AddTo(this);
         }

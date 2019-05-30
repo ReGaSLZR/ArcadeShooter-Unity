@@ -23,6 +23,7 @@ namespace Injection.Model {
         public interface IStatGetter {
             ReactiveProperty<int> GetHealth();
             bool IsHealthMaxCap();
+            bool IsPlayerDead();
 
             ReactiveProperty<int> GetShield();
             bool IsShieldMaxCap();
@@ -120,6 +121,10 @@ namespace Injection.Model {
 
         public bool IsHealthMaxCap() {
             return (m_reactiveHealth.Value == MAX_HEALTH);
+        }
+
+        public bool IsPlayerDead() {
+            return (m_reactiveHealth.Value == 0);
         }
 
         public ReactiveProperty<int> GetShield() {

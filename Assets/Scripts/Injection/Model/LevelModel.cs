@@ -35,7 +35,7 @@ namespace Injection.Model {
         }
 
         private void LoadScene(int index) {
-            SceneManager.UnloadSceneAsync(GetCurrentSceneIndex());
+            //SceneManager.UnloadSceneAsync(GetCurrentSceneIndex());
 
             LogUtil.PrintInfo(this, GetType(), "Loading scene index " + index);
             Time.timeScale = 1;

@@ -10,7 +10,7 @@ namespace UI.GamePlay {
     {
 
         [Header("GamePlay Panels")]
-        [SerializeField] Image m_panelHUD;
+        [SerializeField] Image m_panelGamePlay;
         [SerializeField] Image m_panelPause;
         [SerializeField] Image m_panelShop;
         [SerializeField] Image m_panelGameOver;
@@ -19,14 +19,14 @@ namespace UI.GamePlay {
         [SerializeField] Button[] m_buttonsPause;
         [SerializeField] Button[] m_buttonsResume;
 
-        [Inject] private readonly RoundModel.IGetter m_timerGetter;
+        [Inject] private readonly RoundModel.IGetter m_roundGetter;
         [Inject] private readonly PlayerStatsModel.IStatGetter m_statGetter;
 
         private void Start() {
             SetButtonObservers();
             SetStatusObservers();
 
-            ActivateOnePanel(m_panelHUD);
+            ActivateOnePanel(m_panelGamePlay);
         }
 
         private void ActivateOnePanel(Image image) {
@@ -35,7 +35,7 @@ namespace UI.GamePlay {
         }
 
         private void DeactivateAllPanels() {
-            m_panelHUD.gameObject.SetActive(false);
+            m_panelGamePlay.gameObject.SetActive(false);
             m_panelGameOver.gameObject.SetActive(false);
             m_panelPause.gameObject.SetActive(false);
             m_panelShop.gameObject.SetActive(false);
@@ -54,7 +54,7 @@ namespace UI.GamePlay {
             foreach(Button resumeButton in m_buttonsResume) {
                 resumeButton.OnClickAsObservable()
                     .Subscribe(_ => {
-                        ActivateOnePanel(m_panelHUD);
+                        ActivateOnePanel(m_panelGamePlay);
                         Time.timeScale = 1;
                     })
                     .AddTo(this);
@@ -67,8 +67,8 @@ namespace UI.GamePlay {
                .Subscribe(_ => ActivateOnePanel(m_panelGameOver))
                .AddTo(this);
 
-            m_timerGetter.GetTimer()
-                .Where(timer => (timer == 0))
+            m_roundGetter.GetTimer()
+                .Where(timer => ((timer == 0) && !m_statGetter.IsPlayerDead()))
                 .Subscribe(_ => {
                     ActivateOnePanel(m_panelShop);
                     Time.timeScale = 0;
