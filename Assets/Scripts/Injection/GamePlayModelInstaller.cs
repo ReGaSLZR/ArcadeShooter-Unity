@@ -11,6 +11,7 @@ namespace Injection {
         [SerializeField] private PlayerPrefsModel m_playerPrefsModel;
         [SerializeField] private RoundModel m_timerModel;
         [SerializeField] private LevelModel m_levelModel;
+        [SerializeField] private SpawnParentModel m_spawnParentModel;
 
         [Space]
 
@@ -20,13 +21,15 @@ namespace Injection {
             Container.InjectGameObject(gameObject);
         }
 
-        public void InstantiateInjectPrefab(GameObject prefab, GameObject parent) {
+        public GameObject InstantiateInjectPrefab(GameObject prefab, GameObject parent) {
             if (prefab == null) {
                 LogUtil.PrintWarning(this, this.GetType(), "Cannot InjectPrefab() with NULL prefab.");
-                return;
+                return null;
             }
 
-            InjectGameObject(Instantiate(prefab, parent.transform.position, parent.transform.rotation));
+            GameObject newGameObject = Instantiate(prefab, parent.transform.position, parent.transform.rotation);
+            InjectGameObject(newGameObject);
+            return newGameObject;
         }
 
         public override void InstallBindings() {
@@ -39,6 +42,9 @@ namespace Injection {
             Container.Bind<PlayerPrefsModel.ISetter>().FromInstance(m_playerPrefsModel);
 
             Container.Bind<LevelModel.ISetter>().FromInstance(m_levelModel);
+
+            Container.Bind<SpawnParentModel.ILocation>().FromInstance(m_spawnParentModel);
+            Container.Bind<SpawnParentModel.IParent>().FromInstance(m_spawnParentModel);
 
             Container.Bind<RoundModel.IGetter>().FromInstance(m_timerModel);
             Container.Bind<RoundModel.ISetter>().FromInstance(m_timerModel);

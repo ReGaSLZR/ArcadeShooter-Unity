@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Zenject;
 
 namespace Character.Skill {
 
@@ -9,10 +8,9 @@ namespace Character.Skill {
 		[SerializeField] private float m_force = 1f;
         [SerializeField] private Collider2D m_spawnOwnerCollider2D;
 		[SerializeField] private Transform m_childSpawnPoint;
+
         [Tooltip("Make sure the prefab has a Rigidbody2D attached to it.")]
 		[SerializeField] private GameObject m_prefabProjectile;
-
-        [Inject] readonly Injection.Instantiator m_instantiator;
 
         private void Awake() {
 			if((m_prefabProjectile == null) || (m_childSpawnPoint == null) 
@@ -26,9 +24,9 @@ namespace Character.Skill {
 
         protected override void ExecuteUseSkill() {
 //			LogUtil.PrintInfo(this, this.GetType(), "Spawning projectile...");
-			GameObject projectile = Instantiate(m_prefabProjectile, m_childSpawnPoint.gameObject.transform.position,
-				m_childSpawnPoint.gameObject.transform.rotation);
-            m_instantiator.InjectGameObject(projectile);
+			GameObject projectile = m_instantiator.InstantiateInjectPrefab(
+                m_prefabProjectile, m_childSpawnPoint.gameObject);
+            m_spawnParent.ParentThisChild(projectile);
 
             AddForceToProjectile(projectile);
             AddOwnershipToProjectile(projectile);

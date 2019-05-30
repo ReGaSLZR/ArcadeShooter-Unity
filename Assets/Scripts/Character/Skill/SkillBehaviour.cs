@@ -1,21 +1,23 @@
-﻿using UnityEngine;
+﻿using Injection.Model;
+using UnityEngine;
+using Zenject;
 
 namespace Character.Skill {
 
 	public abstract class SkillBehaviour : MonoBehaviour {
 
-        private bool m_isSkillUsable = true;
+        [Inject] protected readonly FXModel.IGetter m_fxModel;
+        [Inject] protected readonly SpawnParentModel.IParent m_spawnParent;
+        [Inject] protected readonly Injection.Instantiator m_instantiator;
 
         protected abstract void ExecuteUseSkill();
 
         public void UseSkill() {
-            if(m_isSkillUsable) {
-                ExecuteUseSkill();
-            }
+             ExecuteUseSkill();
         }
 
         public void StopSkill() {
-            m_isSkillUsable = false;
+            StopAllCoroutines();
             Destroy(this);
         }
 

@@ -43,7 +43,6 @@ namespace Character.AI {
 				m_aim.StopAiming();
 			}
 
-
             if (m_skillDefault != null) {
                 m_skillDefault.StopSkill();
             }

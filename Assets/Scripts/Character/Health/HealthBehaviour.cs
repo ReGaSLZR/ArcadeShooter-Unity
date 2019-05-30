@@ -16,6 +16,7 @@ namespace Character.Health {
 
         [Inject] protected readonly FXModel.IGetter m_fxModel;
         [Inject] protected readonly Injection.Instantiator m_instantiator;
+        [Inject] protected readonly SpawnParentModel.IParent m_spawnParent;
 
         public ReactiveProperty<bool> m_reactiveIsDead { get; private set; }
 
@@ -38,26 +39,23 @@ namespace Character.Health {
 
         private void ManageDamage() {
             if(m_health > 0) {
-                ActivateDamageFX();
+                ActivateDamageFX(false);
             }
             else {
                 StartCoroutine(CorKill());
             }
         }
 
-        private void ActivateDamageFX() {
-            LogUtil.PrintInfo(this, GetType(), "ActivateDamageFX()");
-            m_instantiator.InstantiateInjectPrefab(m_fxModel.GetRandomFXDamage(), this.gameObject);
-        }
-
-        private void ActivateDeathFX() {
-            LogUtil.PrintInfo(this, GetType(), "ActivateDeathFX()");
-            m_instantiator.InstantiateInjectPrefab(m_fxModel.GetRandomFXDeath(m_fxDeath), this.gameObject);
+        private void ActivateDamageFX(bool isFinalHit) {
+            m_spawnParent.ParentThisChild(m_instantiator.InstantiateInjectPrefab(
+                isFinalHit ? m_fxModel.GetRandomFXDeath(m_fxDeath) 
+                    : m_fxModel.GetRandomFXDamage(), 
+                this.gameObject));
         }
 
         private IEnumerator CorKill() {
             LogUtil.PrintInfo(this, GetType(), "CorKill()");
-            ActivateDeathFX();
+            ActivateDamageFX(true);
             OnDeath();
             m_reactiveIsDead.Value = true;
 

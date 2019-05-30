@@ -6,7 +6,6 @@ namespace Misc {
     public class SpawnableCharacter
     {
         public GameObject m_prefabCharacter;
-        public Transform m_spawnParent;
 
         [Space]
 

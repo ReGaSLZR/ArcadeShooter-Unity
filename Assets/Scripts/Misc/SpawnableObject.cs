@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Injection;
+using Injection.Model;
+using System;
 using UnityEngine;
 
 namespace Misc {
@@ -14,15 +16,17 @@ namespace Misc {
         [Range(MIN_CHANCE, MAX_CHANCE)]
         [SerializeField] private int m_spawnChance;
 
-        public void TrySpawn(Injection.Instantiator instantiator, GameObject spawnParent) {
+        public void TrySpawn(Instantiator instantiator, 
+            SpawnParentModel.IParent spawnParent, GameObject transformReference) {
             if(m_prefabSpawnable == null) {
-                LogUtil.PrintError(spawnParent, GetType(), "Cannot TrySpawn() if prefab is NULL.");
+                LogUtil.PrintError(transformReference, GetType(), "Cannot TrySpawn() if prefab is NULL.");
                 return;
             }
 
             bool shouldSpawn = (UnityEngine.Random.Range(MIN_CHANCE, MAX_CHANCE) <= m_spawnChance);
             if(shouldSpawn) {
-                instantiator.InstantiateInjectPrefab(m_prefabSpawnable, spawnParent);
+                spawnParent.ParentThisChild(
+                    instantiator.InstantiateInjectPrefab(m_prefabSpawnable, transformReference));
             }
         }
 

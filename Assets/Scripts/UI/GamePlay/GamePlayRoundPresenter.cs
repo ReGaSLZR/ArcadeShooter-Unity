@@ -32,6 +32,9 @@ namespace UI.GamePlay {
         [Inject] private readonly RoundModel.IGetter m_roundGetter;
         [Inject] private readonly RoundModel.ISetter m_roundSetter;
 
+        [Inject] private readonly SpawnParentModel.ILocation m_spawnLocations;
+        [Inject] private readonly SpawnParentModel.IParent m_spawnParent;
+
         [Inject] private readonly PlayerStatsModel.IStatGetter m_playerStats;
 
         [Inject] private readonly Instantiator m_instantiator;
@@ -53,27 +56,15 @@ namespace UI.GamePlay {
             StartCoroutine(CorPlayCutscene());
         }
 
-        private void DestroyAllSpawnedCharacters() {
-            foreach (SpawnableCharacter spawnable in m_spawnableCharacters) {
-                Transform parent = spawnable.m_spawnParent;
-
-                if (parent.childCount > 0) {
-                    for (int x = (parent.childCount - 1); x >= 0; x--) {
-                        Destroy(parent.GetChild(x).gameObject);
-                    }
-                }
-            }
-        }
-
         private void SetDestroySpawnedCharactersObservable() {
             m_playerStats.GetHealth()
                 .Where(health => (health == 0))
-                .Subscribe(_ => DestroyAllSpawnedCharacters())
+                .Subscribe(_ => m_spawnParent.DestroyAllSpawns())
                 .AddTo(this);
 
             m_roundGetter.GetTimer()
                 .Where(timer => (timer == 0))
-                .Subscribe(_ => DestroyAllSpawnedCharacters())
+                .Subscribe(_ => m_spawnParent.DestroyAllSpawns())
                 .AddTo(this);
         }
 
@@ -82,12 +73,11 @@ namespace UI.GamePlay {
                 if(spawnable.IsEligibleForRound(m_roundGetter.GetRoundNumber())) {
                     for(int x=0; x<(spawnable.m_spawnPerBatch
                         * m_roundGetter.GetRoundNumber()); x++) {
-                            GameObject newCharacter = Instantiate(
-                            spawnable.m_prefabCharacter, spawnable.m_spawnParent.position,
-                            spawnable.m_spawnParent.rotation);
-                            m_instantiator.InjectGameObject(newCharacter);
+                            GameObject newCharacter = m_instantiator.InstantiateInjectPrefab(
+                                spawnable.m_prefabCharacter,
+                                m_spawnLocations.GetRandomSpawnLocation().gameObject);
 
-                            newCharacter.transform.SetParent(spawnable.m_spawnParent);
+                            m_spawnParent.ParentThisChild(newCharacter);
                     }    
                 }
             }

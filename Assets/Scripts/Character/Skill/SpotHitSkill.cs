@@ -2,7 +2,6 @@
 using Injection.Model;
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 namespace Character.Skill {
 
@@ -12,9 +11,6 @@ namespace Character.Skill {
         [Space]
 		[SerializeField] private bool m_isDestroyedOnHit;
         [SerializeField] private FXModel.FXDeath m_fxDeath;
-
-        [Inject] readonly FXModel.IGetter m_fxModel;
-        [Inject] readonly Injection.Instantiator m_instantiator;
 
 		private void Awake() {
 			if(m_targetDetector == null) {
@@ -29,7 +25,9 @@ namespace Character.Skill {
 			}
 
 			if(m_isDestroyedOnHit) {
-                m_instantiator.InstantiateInjectPrefab(m_fxModel.GetRandomFXDeath(m_fxDeath), this.gameObject);
+                m_spawnParent.ParentThisChild(m_instantiator.InstantiateInjectPrefab(
+                    m_fxModel.GetRandomFXDeath(m_fxDeath), this.gameObject));
+                
 				Destroy(this.gameObject);
 			}
 		}

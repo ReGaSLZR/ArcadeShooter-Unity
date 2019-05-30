@@ -13,7 +13,7 @@ namespace Character.Health {
 
         protected override void OnDeath() {
             if(m_onDeathSpawn != null) {
-                m_onDeathSpawn.TrySpawn(m_instantiator, gameObject);
+                m_onDeathSpawn.TrySpawn(m_instantiator, m_spawnParent, gameObject);
             }
         }
 
