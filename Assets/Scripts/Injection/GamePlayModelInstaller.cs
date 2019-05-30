@@ -9,6 +9,7 @@ namespace Injection {
         [SerializeField] private BoundsModel m_boundsModel;
         [SerializeField] private FXModel m_fxModel;
         [SerializeField] private PlayerPrefsModel m_playerPrefsModel;
+        [SerializeField] private RoundModel m_timerModel;
         [SerializeField] private LevelModel m_levelModel;
 
         [Space]
@@ -38,6 +39,9 @@ namespace Injection {
             Container.Bind<PlayerPrefsModel.ISetter>().FromInstance(m_playerPrefsModel);
 
             Container.Bind<LevelModel.ISetter>().FromInstance(m_levelModel);
+
+            Container.Bind<RoundModel.IGetter>().FromInstance(m_timerModel);
+            Container.Bind<RoundModel.ISetter>().FromInstance(m_timerModel);
 
             Container.Bind<PlayerStatsModel.IStatSetter>().FromInstance(m_playerStatsModel);
             Container.Bind<PlayerStatsModel.IStatGetter>().FromInstance(m_playerStatsModel);

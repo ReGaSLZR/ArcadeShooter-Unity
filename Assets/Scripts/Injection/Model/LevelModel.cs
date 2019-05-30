@@ -30,7 +30,13 @@ namespace Injection.Model {
             m_panelLoading.gameObject.SetActive(false);
         }
 
+        private int GetCurrentSceneIndex() {
+            return SceneManager.GetActiveScene().buildIndex;
+        }
+
         private void LoadScene(int index) {
+            SceneManager.UnloadSceneAsync(GetCurrentSceneIndex());
+
             LogUtil.PrintInfo(this, GetType(), "Loading scene index " + index);
             Time.timeScale = 1;
             m_panelLoading.gameObject.SetActive(true);
@@ -54,7 +60,7 @@ namespace Injection.Model {
         }
 
         public void ReloadCurrentLevel() {
-            LoadScene(SceneManager.GetActiveScene().buildIndex);
+            LoadScene(GetCurrentSceneIndex());
         }
     }
 

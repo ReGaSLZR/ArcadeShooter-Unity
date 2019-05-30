@@ -24,11 +24,11 @@ namespace UI.GamePlay {
         [SerializeField] TextMeshProUGUI m_textCoins;
         [SerializeField] TextMeshProUGUI m_textScore;
 
-        [Inject] readonly PlayerStatsModel.IStatGetter m_stats;
+        [Space]
+        [SerializeField] TextMeshProUGUI m_textTimer;
 
-        private void Awake() {
-            
-        }
+        [Inject] readonly PlayerStatsModel.IStatGetter m_stats;
+        [Inject] readonly RoundModel.IGetter m_timer;
 
         private void Start() {
             m_stats.GetHealth()
@@ -70,7 +70,9 @@ namespace UI.GamePlay {
                 .Subscribe(score => m_textScore.text = score.ToString())
                 .AddTo(this);
 
-
+            m_timer.GetTimer()
+                .Subscribe(countdown => m_textTimer.text = countdown.ToString())
+                .AddTo(this);
         }
 
     }
