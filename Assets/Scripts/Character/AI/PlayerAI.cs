@@ -24,7 +24,7 @@ namespace Character.AI {
         private DateTimeOffset m_lastFired;
 
 		private void Awake() {
-			if((m_skillDefault == null) || ((m_skillSpecial == null))) {
+			if((m_skillDefault == null) || (m_skillSpecial == null)) {
 				LogUtil.PrintError(this, this.GetType(), 
 					"Cannot have a NULL skills.");
 				Destroy(this);

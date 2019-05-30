@@ -11,7 +11,7 @@ namespace Character.Movement {
 
 		protected Rigidbody2D m_rigidBody2D;
 
-		private void Awake() {
+		protected virtual void Awake() {
 			m_rigidBody2D = GetComponent<Rigidbody2D>();
 		}
 

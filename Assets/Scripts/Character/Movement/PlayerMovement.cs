@@ -9,11 +9,18 @@ namespace Character.Movement {
     public class PlayerMovement : MovementBehaviour
     {
 
+        [SerializeField] private Vector2 m_startingPosition;
+
         [Inject] readonly BoundsModel.IGetter m_boundsModel;
         [Inject] readonly RoundModel.IGetter m_roundModel;
 
         private void Start() {
             SetInputObservers();
+
+            m_roundModel.GetTimer()
+                .Where(countdown => (countdown == 0))
+                .Subscribe(_ => m_rigidBody2D.MovePosition(m_startingPosition))
+                .AddTo(this);
         }
 
         private void SetInputObservers() {
