@@ -12,6 +12,7 @@ namespace Injection.Model {
         public interface ISetter {
             void LoadMainMenu();
             void LoadGamePlay();
+            void ReloadCurrentLevel();
         }
 
         #endregion
@@ -50,6 +51,10 @@ namespace Injection.Model {
 
         public void LoadGamePlay() {
             LoadScene(INDEX_GAMEPLAY);
+        }
+
+        public void ReloadCurrentLevel() {
+            LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
