@@ -10,7 +10,8 @@ namespace Character.AI {
 
 	public class PlayerAI : AIBehaviour {
 
-		[SerializeField] private SkillBehaviour m_skillSpecial;
+		[SerializeField] private SkillBehaviour m_skillSpecialLimitedUse;
+		[SerializeField] private SkillBehaviour m_skillInvocableRechargeable;
 
 		[Range(0f, 10f)]
 		[SerializeField] private float m_skillInterval = 1f;
@@ -24,7 +25,8 @@ namespace Character.AI {
         private DateTimeOffset m_lastFired;
 
 		private void Awake() {
-			if((m_skillDefault == null) || (m_skillSpecial == null)) {
+			if((m_skillDefault == null) || (m_skillSpecialLimitedUse == null) || 
+                (m_skillInvocableRechargeable == null)) {
 				LogUtil.PrintError(this, this.GetType(), 
 					"Cannot have a NULL skills.");
 				Destroy(this);
@@ -39,12 +41,13 @@ namespace Character.AI {
         protected override void SafelyStopExtraComponents() {
             m_roundSetter.StopTimer();
 
-            m_skillSpecial.StopSkill();
-			Destroy(m_skillSpecial);	
+            m_skillSpecialLimitedUse.StopSkill();
+			Destroy(m_skillSpecialLimitedUse);	
 		}
 
 		private void SetSkillObservers() {
-			this.UpdateAsObservable()
+            //Normal/Default skill
+            this.UpdateAsObservable()
 				.Select(_ => Input.GetMouseButtonDown(0))
 				.Where(hasClickedMouse0 => hasClickedMouse0 && (m_roundGetter.GetTimer().Value > 0))
 				.Timestamp()
@@ -56,20 +59,45 @@ namespace Character.AI {
 				})
 				.AddTo(this);
 
+            //Tickable skill: Left-click mouse
 			this.UpdateAsObservable()
 				.Select(_ => Input.GetMouseButtonDown(1))
 				.Where(hasClickedMouse1 => hasClickedMouse1 && 
-                    (m_statsGetter.GetRockets().Value > 0) && (m_roundGetter.GetTimer().Value > 0))
+                    (m_statsGetter.GetSpecialLimitedSkill().Value > 0) && (m_roundGetter.GetTimer().Value > 0))
 				.Timestamp()
 				.Where(timestamp => 
 					(timestamp.Timestamp > m_lastFired.AddSeconds(m_skillInterval)))
 				.Subscribe(timestamp => {
-					m_skillSpecial.UseSkill();
-                    m_statsSetter.UseRocket();
+					m_skillSpecialLimitedUse.UseSkill();
+                    m_statsSetter.UseSpecialLimitedSkill();
 					m_lastFired = timestamp.Timestamp;
 				})
 				.AddTo(this);
-		}
+
+            //Draining Skill: Jump/Spacebar
+            this.UpdateAsObservable()
+                .Select(_ => Input.GetButtonDown("Jump"))
+                .Where(hasPressed => hasPressed &&
+                    (m_roundGetter.GetTimer().Value > 0))
+                .Subscribe(timestamp => {
+                    bool isToggled = m_statsSetter.InvokeRechargeableSkill(!m_skillInvocableRechargeable.m_isActive);
+
+                    if(isToggled) {
+                        m_skillInvocableRechargeable.UseSkill();
+                    } else {
+                        LogUtil.PrintWarning(this, GetType(), "Cannot use Shield skill.");
+                    }
+
+                })
+                .AddTo(this);
+
+            //Force-stop Skill when the invocable-rechargeable skill
+            //from playerStats is drained
+            m_statsGetter.GetInvocableRechargeableSkill()
+                .Where(charge => (charge == 0))
+                .Subscribe(_ => m_skillInvocableRechargeable.StopSkill())
+                .AddTo(this);
+        }
 	}
 
 

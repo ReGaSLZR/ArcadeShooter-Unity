@@ -6,6 +6,8 @@ namespace Character.Skill {
 
 	public abstract class SkillBehaviour : MonoBehaviour {
 
+        public bool m_isActive { get; protected set; }
+
         [Inject] protected readonly FXModel.IGetter m_fxModel;
         [Inject] protected readonly SpawnParentModel.IParent m_spawnParent;
         [Inject] protected readonly Injection.Instantiator m_instantiator;
@@ -16,7 +18,7 @@ namespace Character.Skill {
              ExecuteUseSkill();
         }
 
-        public void StopSkill() {
+        public virtual void StopSkill() {
             StopAllCoroutines();
             Destroy(this);
         }

@@ -17,6 +17,8 @@ namespace Character.Skill {
 				LogUtil.PrintError(this, this.GetType(), "Cannot have a NULL target detector.");
 				Destroy(this);
 			}
+
+            m_isActive = true;
 		}
 
         protected override void ExecuteUseSkill() {

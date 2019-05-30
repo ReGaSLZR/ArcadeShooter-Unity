@@ -20,6 +20,8 @@ namespace Character.Skill {
 					"or the Child Spawn Point is NULL.");	
 				Destroy(this);
 			}
+
+            m_isActive = true;
 		}
 
         protected override void ExecuteUseSkill() {

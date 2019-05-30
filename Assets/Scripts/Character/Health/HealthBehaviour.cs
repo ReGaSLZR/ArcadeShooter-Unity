@@ -54,7 +54,7 @@ namespace Character.Health {
         }
 
         private IEnumerator CorKill() {
-            LogUtil.PrintInfo(this, GetType(), "CorKill()");
+            //LogUtil.PrintInfo(this, GetType(), "CorKill()");
             ActivateDamageFX(true);
             OnDeath();
             m_reactiveIsDead.Value = true;

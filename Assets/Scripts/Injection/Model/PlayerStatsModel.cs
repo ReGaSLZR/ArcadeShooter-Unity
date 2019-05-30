@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 using UnityEngine;
 
 namespace Injection.Model {
@@ -13,9 +14,10 @@ namespace Injection.Model {
         #region Interfaces
         public interface IShop {
             bool IncreaseHealthByOne();   
-            bool IncreaseShieldByTen();
-            bool IncreaseRocketsMaxByOne();
-            void RefillRockets();
+            bool IncreaseSkillInvocableRechargeableByTen();
+            bool IncreaseSkillLimitedSpecialMaxByOne();
+            void RefillSkillLimitedSpecial();
+            void RefillInvocableRechargeable();
 
             bool DeductCoinsBy(int coins);
         }
@@ -25,12 +27,11 @@ namespace Injection.Model {
             bool IsHealthMaxCap();
             bool IsPlayerDead();
 
-            ReactiveProperty<int> GetShield();
-            bool IsShieldMaxCap();
-            ReactiveProperty<int> GetShieldRegen();
+            ReactiveProperty<int> GetInvocableRechargeableSkill();
+            bool IsInvocableRechargeableMaxCap();
 
-            ReactiveProperty<int> GetRockets();
-            bool IsRocketMaxCap();
+            ReactiveProperty<int> GetSpecialLimitedSkill();
+            bool IsSpecialLimitedMaxCap();
 
             ReactiveProperty<int> GetScore();
             ReactiveProperty<int> GetCoins();
@@ -38,8 +39,8 @@ namespace Injection.Model {
 
         public interface IStatSetter {
             bool DeductHealthByOne();
-            bool UseShield();
-            bool UseRocket();
+            bool InvokeRechargeableSkill(bool shouldUse);
+            bool UseSpecialLimitedSkill();
         }
 
         public interface ICoinSetter {
@@ -52,32 +53,76 @@ namespace Injection.Model {
         #endregion
 
         private const int MAX_HEALTH = 3;
-        private const int MAX_SHIELD = 100;
-        private int m_currentMaxShield = 40;
-        private const int MAX_SHIELD_REGEN_TICK = 10;
-
+        private const int MAX_UPGRADE_SKILL_RECHARGEABLE = 100;
+        private const int SKILL_RECHARGEABLE_DRAIN_TICK = 10;
+        private const int SKILL_RECHARGEABLE_REGEN_TIME = 10;
         private const int MAX_SCORE = 9999;
         private const int MAX_COINS = 9999;
+        private const int MAX_UPGRADE_SKILL_LIMITED_SPECIAL = 10;
 
-        private const int MAX_ROCKETS = 10;
-        private int m_currentMaxSpecialRockets = 3;
+        private int m_currentMaxRechargeable = 40;
+        private bool m_isInvocableRechargeableInUse;
+        private DateTimeOffset m_rechargeRegenRestTimestamp;
+
+        private int m_currentMaxSpecialLimited = 3;
 
         private ReactiveProperty<int> m_reactiveHealth;
-        private ReactiveProperty<int> m_reactiveRockets;
-        private ReactiveProperty<int> m_reactiveShield;
-        private ReactiveProperty<int> m_reactiveShieldRegen;
+        private ReactiveProperty<int> m_reactiveSpecialLimitedSkill;
+        private ReactiveProperty<int> m_reactiveInvocableRechargeableSkill;
 
         private ReactiveProperty<int> m_reactiveScore;
         private ReactiveProperty<int> m_reactiveCoins;
 
         private void Awake() {
             m_reactiveHealth = new ReactiveProperty<int>(MAX_HEALTH);
-            m_reactiveRockets = new ReactiveProperty<int>(m_currentMaxSpecialRockets);
-            m_reactiveShield = new ReactiveProperty<int>(m_currentMaxShield);
-            m_reactiveShieldRegen = new ReactiveProperty<int>(0);
+            m_reactiveSpecialLimitedSkill = new ReactiveProperty<int>(m_currentMaxSpecialLimited);
+            m_reactiveInvocableRechargeableSkill = new ReactiveProperty<int>(m_currentMaxRechargeable);
 
             m_reactiveScore = new ReactiveProperty<int>(0);
             m_reactiveCoins = new ReactiveProperty<int>(0);
+        }
+
+        private void Start() {
+            SetRechargeableRegenObservable();
+            SetRechargeableUseObservable();
+
+            m_reactiveInvocableRechargeableSkill
+                .Where(charge => (charge == 0))
+                .Subscribe(_ => {
+                    m_isInvocableRechargeableInUse = false;
+                    //so as to prevent auto-full recharge when Player is not hit
+                    //during the duration of the invoked rechargeable skill
+                    ResetRechargeRegen();
+                })
+                .AddTo(this);
+        }
+
+        private void ResetRechargeRegen() {
+            m_rechargeRegenRestTimestamp = DateTimeOffset.Now;
+        }
+
+        private void SetRechargeableUseObservable() {
+            Observable.Interval(TimeSpan.FromSeconds(1))
+                .Where(_ => m_isInvocableRechargeableInUse && (m_reactiveInvocableRechargeableSkill.Value > 0))
+                .Subscribe(_ => {
+                    m_reactiveInvocableRechargeableSkill.Value -= SKILL_RECHARGEABLE_DRAIN_TICK;
+                })
+                .AddTo(this);
+        }
+
+        private void SetRechargeableRegenObservable() {
+            Observable.Interval(TimeSpan.FromSeconds(1))
+                .Timestamp()
+                .Where(timeStamp => !m_isInvocableRechargeableInUse &&
+                    (m_reactiveInvocableRechargeableSkill.Value < m_currentMaxRechargeable) &&
+                    (timeStamp.Timestamp >= m_rechargeRegenRestTimestamp.AddSeconds(SKILL_RECHARGEABLE_REGEN_TIME))
+                )
+                .Subscribe(_ => {
+                    m_reactiveInvocableRechargeableSkill.Value = m_currentMaxRechargeable;
+                    m_isInvocableRechargeableInUse = false;
+                    ResetRechargeRegen();
+                })
+                .AddTo(this);
         }
 
         #region IStatSetter functions
@@ -85,6 +130,7 @@ namespace Injection.Model {
         public bool DeductHealthByOne() {
             if (m_reactiveHealth.Value > 0) {
                 m_reactiveHealth.Value--;
+                ResetRechargeRegen();
                 return true;
             }
             else {
@@ -93,18 +139,21 @@ namespace Injection.Model {
             }
         }
 
-        public bool UseShield() {
-            if(m_reactiveShieldRegen.Value == MAX_SHIELD_REGEN_TICK) {
-                LogUtil.PrintWarning(this, GetType(), "UseShield() TODO");
-                //TODO
+        /* 
+         * Returns if the shield was toggled. If FALSE, it is in regen state. 
+         */
+        public bool InvokeRechargeableSkill(bool shouldUse) {
+            if(m_reactiveInvocableRechargeableSkill.Value > 0) {
+                m_isInvocableRechargeableInUse = shouldUse;
+                ResetRechargeRegen();
                 return true;
             }
             return false;
         }
 
-        public bool UseRocket() {
-            if(m_reactiveRockets.Value > 0) {
-                m_reactiveRockets.Value--;
+        public bool UseSpecialLimitedSkill() {
+            if(m_reactiveSpecialLimitedSkill.Value > 0) {
+                m_reactiveSpecialLimitedSkill.Value--;
                 return true;
             }
 
@@ -127,24 +176,20 @@ namespace Injection.Model {
             return (m_reactiveHealth.Value == 0);
         }
 
-        public ReactiveProperty<int> GetShield() {
-            return m_reactiveShield;
+        public bool IsInvocableRechargeableMaxCap() {
+            return (m_currentMaxRechargeable == MAX_UPGRADE_SKILL_RECHARGEABLE);
         }
 
-        public bool IsShieldMaxCap() {
-            return (m_currentMaxShield == MAX_SHIELD);
+        public ReactiveProperty<int> GetInvocableRechargeableSkill() {
+            return m_reactiveInvocableRechargeableSkill;
         }
 
-        public ReactiveProperty<int> GetShieldRegen() {
-            return m_reactiveShieldRegen;
+        public ReactiveProperty<int> GetSpecialLimitedSkill() {
+            return m_reactiveSpecialLimitedSkill;
         }
 
-        public ReactiveProperty<int> GetRockets() {
-            return m_reactiveRockets;
-        }
-
-        public bool IsRocketMaxCap() {
-            return (m_currentMaxSpecialRockets == MAX_ROCKETS);
+        public bool IsSpecialLimitedMaxCap() {
+            return (m_currentMaxSpecialLimited == MAX_UPGRADE_SKILL_LIMITED_SPECIAL);
         }
 
         public ReactiveProperty<int> GetScore() {
@@ -184,10 +229,10 @@ namespace Injection.Model {
             return false;
         }
 
-        public bool IncreaseShieldByTen() {
-            if(m_currentMaxShield < MAX_SHIELD) {
-                m_currentMaxShield += 10;
-                m_reactiveShield.Value = m_currentMaxShield;
+        public bool IncreaseSkillInvocableRechargeableByTen() {
+            if(m_currentMaxRechargeable < MAX_UPGRADE_SKILL_RECHARGEABLE) {
+                m_currentMaxRechargeable += 10;
+                m_reactiveInvocableRechargeableSkill.Value = m_currentMaxRechargeable;
 
                 return true;
             }
@@ -195,17 +240,21 @@ namespace Injection.Model {
             return false;
         }
 
-        public bool IncreaseRocketsMaxByOne() {
-            if(!IsRocketMaxCap()) {
-                m_currentMaxSpecialRockets++;
+        public bool IncreaseSkillLimitedSpecialMaxByOne() {
+            if(!IsSpecialLimitedMaxCap()) {
+                m_currentMaxSpecialLimited++;
                 return true;
             }
 
             return false;
         }
 
-        public void RefillRockets() {
-            m_reactiveRockets.Value = m_currentMaxSpecialRockets;
+        public void RefillSkillLimitedSpecial() {
+            m_reactiveSpecialLimitedSkill.Value = m_currentMaxSpecialLimited;
+        }
+
+        public void RefillInvocableRechargeable() {
+            m_reactiveInvocableRechargeableSkill.Value = m_currentMaxRechargeable;
         }
 
         public bool DeductCoinsBy(int coins) {

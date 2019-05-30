@@ -16,7 +16,7 @@ namespace Character.Movement {
 		}
 
 		public void StopMoving() {
-			LogUtil.PrintInfo(this, this.GetType(), "StopMoving() called.");
+			//LogUtil.PrintInfo(this, this.GetType(), "StopMoving() called.");
             Destroy(this);
 		}
 			

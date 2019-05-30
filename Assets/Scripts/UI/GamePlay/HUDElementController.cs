@@ -35,30 +35,25 @@ namespace UI.GamePlay {
                 .Subscribe(health => m_healthPanel.SetHealthValue(health))
                 .AddTo(this);
 
-            m_stats.GetRockets()
+            m_stats.GetSpecialLimitedSkill()
                 .Subscribe(rockets => {
                     if (rockets > m_sliderRocket.maxValue) {
                         m_sliderRocket.maxValue = rockets;
                     }
 
                     m_sliderRocket.value = rockets;
-                    m_sliderRocketFeedback.enabled = (rockets == 0);
+                    m_sliderRocketFeedback.gameObject.SetActive(rockets == 0);
                 })
                 .AddTo(this);
 
-            m_stats.GetShield()
-                .Subscribe(shield => {
-                    if (shield > m_sliderShield.maxValue) {
-                        m_sliderShield.maxValue = shield;
+            m_stats.GetInvocableRechargeableSkill()
+                .Subscribe(skill => {
+                    if (skill > m_sliderShield.maxValue) {
+                        m_sliderShield.maxValue = skill;
                     }
 
-                    m_sliderShield.value = shield;
-                })
-                .AddTo(this);
-
-            m_stats.GetShieldRegen()
-                .Subscribe(shieldRegen => {
-                    m_sliderShieldFeedback.enabled = (shieldRegen > 0);
+                    m_sliderShield.value = skill;
+                    m_sliderShieldFeedback.gameObject.SetActive(skill == 0);
                 })
                 .AddTo(this);
 

@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e085f83ab549e574a9cf91ac0b809aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_targetTags: 0200000004000000050000000100000003000000
+  m_targetTags: 02000000040000000300000001000000
   m_isLockedToOne: 1
   m_range: 5
 --- !u!114 &114382515895320008
