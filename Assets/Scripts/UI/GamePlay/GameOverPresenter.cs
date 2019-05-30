@@ -8,7 +8,7 @@ using Zenject;
 namespace UI.GamePlay
 {
 
-    public class GameOverElementController : MonoBehaviour
+    public class GameOverPresenter : MonoBehaviour
     {
         [Header("Texts for Player Score")]
         [SerializeField] private TextMeshProUGUI m_textCurrentScore;

@@ -6,7 +6,7 @@ using Zenject;
 
 namespace UI.GamePlay {
 
-    public class GamePanelSwitcher : MonoBehaviour
+    public class GamePlayPanelSwitcher : MonoBehaviour
     {
 
         [Header("GamePlay Panels")]
@@ -19,20 +19,14 @@ namespace UI.GamePlay {
         [SerializeField] Button[] m_buttonsPause;
         [SerializeField] Button[] m_buttonsResume;
 
+        [Inject] private readonly RoundModel.IGetter m_timerGetter;
         [Inject] private readonly PlayerStatsModel.IStatGetter m_statGetter;
 
         private void Start() {
-            ActivateOnePanel(m_panelHUD);
             SetButtonObservers();
+            SetStatusObservers();
 
-            m_statGetter.GetHealth()
-                .Where(health => (health == 0))
-                .Subscribe(_ => {
-                    ActivateOnePanel(m_panelGameOver);
-                })
-                .AddTo(this);
-
-            //TODO Code Shop panel display
+            ActivateOnePanel(m_panelHUD);
         }
 
         private void ActivateOnePanel(Image image) {
@@ -65,6 +59,21 @@ namespace UI.GamePlay {
                     })
                     .AddTo(this);
             }
+        }
+
+        private void SetStatusObservers() {
+            m_statGetter.GetHealth()
+               .Where(health => (health == 0))
+               .Subscribe(_ => ActivateOnePanel(m_panelGameOver))
+               .AddTo(this);
+
+            m_timerGetter.GetTimer()
+                .Where(timer => (timer == 0))
+                .Subscribe(_ => {
+                    ActivateOnePanel(m_panelShop);
+                    Time.timeScale = 0;
+                })
+                .AddTo(this);
         }
 
     }
