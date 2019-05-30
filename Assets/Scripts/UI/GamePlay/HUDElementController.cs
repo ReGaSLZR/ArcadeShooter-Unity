@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace UI {
+namespace UI.GamePlay {
 
     public class HUDElementController : MonoBehaviour
     {

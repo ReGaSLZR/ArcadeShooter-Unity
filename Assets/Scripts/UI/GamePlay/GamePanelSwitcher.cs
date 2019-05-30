@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace UI {
+namespace UI.GamePlay {
 
     public class GamePanelSwitcher : MonoBehaviour
     {
@@ -29,7 +29,6 @@ namespace UI {
                 .Where(health => (health == 0))
                 .Subscribe(_ => {
                     ActivateOnePanel(m_panelGameOver);
-                    Time.timeScale = 0;
                 })
                 .AddTo(this);
 
