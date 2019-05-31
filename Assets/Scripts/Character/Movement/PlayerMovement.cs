@@ -48,7 +48,7 @@ namespace Character.Movement {
 
         private void MoveToPosition(Vector2 position) {
             m_rigidBody2D.position += (position * m_movementSpeed * Time.fixedDeltaTime);
-            m_rigidBody2D.MovePosition(m_boundsModel.ClampPositionToScreenBounds(m_rigidBody2D.position));
+            m_rigidBody2D.MovePosition(m_boundsModel.ClampPositionToBounds(m_rigidBody2D.position));
         }
 
     }
