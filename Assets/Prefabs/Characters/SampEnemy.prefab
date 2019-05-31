@@ -197,7 +197,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_health: 1
   m_fxDeath: 0
-  m_onDeathScoreValue: 50
   m_onDeathSpawn:
     m_prefabSpawnable: {fileID: 1564753252787438, guid: fb49b6d82e4596347a0bb2b1908af6da,
       type: 2}
