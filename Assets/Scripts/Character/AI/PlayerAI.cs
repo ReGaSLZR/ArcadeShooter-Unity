@@ -63,13 +63,13 @@ namespace Character.AI {
 			this.UpdateAsObservable()
 				.Select(_ => Input.GetMouseButtonDown(1))
 				.Where(hasClickedMouse1 => hasClickedMouse1 && 
-                    (m_statsGetter.GetSpecialLimitedSkill().Value > 0) && (m_roundGetter.GetTimer().Value > 0))
+                    (m_statsGetter.GetLimitedSkill().Value > 0) && (m_roundGetter.GetTimer().Value > 0))
 				.Timestamp()
 				.Where(timestamp => 
 					(timestamp.Timestamp > m_lastFired.AddSeconds(m_skillInterval)))
 				.Subscribe(timestamp => {
 					m_skillSpecialLimitedUse.UseSkill();
-                    m_statsSetter.UseSpecialLimitedSkill();
+                    m_statsSetter.UseLimitedSkill();
 					m_lastFired = timestamp.Timestamp;
 				})
 				.AddTo(this);
@@ -93,7 +93,7 @@ namespace Character.AI {
 
             //Force-stop Skill when the invocable-rechargeable skill
             //from playerStats is drained
-            m_statsGetter.GetInvocableRechargeableSkill()
+            m_statsGetter.GetRechargeableSkill()
                 .Where(charge => (charge == 0))
                 .Subscribe(_ => m_skillInvocableRechargeable.StopSkill())
                 .AddTo(this);

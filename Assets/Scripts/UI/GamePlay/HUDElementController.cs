@@ -35,7 +35,7 @@ namespace UI.GamePlay {
                 .Subscribe(health => m_healthPanel.SetHealthValue(health))
                 .AddTo(this);
 
-            m_stats.GetSpecialLimitedSkill()
+            m_stats.GetLimitedSkill()
                 .Subscribe(rockets => {
                     if (rockets > m_sliderRocket.maxValue) {
                         m_sliderRocket.maxValue = rockets;
@@ -46,7 +46,7 @@ namespace UI.GamePlay {
                 })
                 .AddTo(this);
 
-            m_stats.GetInvocableRechargeableSkill()
+            m_stats.GetRechargeableSkill()
                 .Subscribe(skill => {
                     if (skill > m_sliderShield.maxValue) {
                         m_sliderShield.maxValue = skill;
@@ -67,8 +67,18 @@ namespace UI.GamePlay {
 
             m_round.GetTimer()
                 .Where(countdown => (countdown >= 0))
-                .Subscribe(countdown => m_textTimer.text = countdown.ToString())
+                .Subscribe(countdown => {
+                    UpdateSliderMaxValuesOnNewRound(countdown);
+                    m_textTimer.text = countdown.ToString();
+                })
                 .AddTo(this);
+        }
+
+        private void UpdateSliderMaxValuesOnNewRound(int countdown) {
+            if (countdown == m_round.GetTimerMax()) {
+                m_sliderRocket.maxValue = m_stats.GetLimitedSkillCurrentCap();
+                m_sliderShield.maxValue = m_stats.GetRechargeableSkillCurrentCap();
+            }
         }
 
     }

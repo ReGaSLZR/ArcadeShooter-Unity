@@ -9,6 +9,7 @@ namespace Injection.Model {
         #region Interfaces
         public interface IGetter {
             ReactiveProperty<int> GetTimer();
+            int GetTimerMax();
             int GetRoundNumber();
         }
 
@@ -62,6 +63,10 @@ namespace Injection.Model {
 
         public ReactiveProperty<int> GetTimer() {
             return m_reactiveCountdown;
+        }
+
+        public int GetTimerMax() {
+            return m_countdownInSeconds;
         }
 
         public int GetRoundNumber() {
