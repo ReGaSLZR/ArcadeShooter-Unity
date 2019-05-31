@@ -71,7 +71,6 @@ namespace UI.GamePlay {
                 .Where(timer => ((timer == 0) && !m_statGetter.IsPlayerDead()))
                 .Subscribe(_ => {
                     ActivateOnePanel(m_panelShop);
-                    Time.timeScale = 0;
                 })
                 .AddTo(this);
         }
