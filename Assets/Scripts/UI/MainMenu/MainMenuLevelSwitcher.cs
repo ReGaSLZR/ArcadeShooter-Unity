@@ -9,12 +9,13 @@ namespace UI.MainMenu {
     {
 
         [SerializeField] private Button m_buttonPlay;
+        [SerializeField] private Button m_buttonExit;
 
         [Inject] private readonly LevelModel.ISetter m_levelSetter;
 
         private void Awake() {
-            if(m_buttonPlay == null) {
-                LogUtil.PrintError(this, GetType(), "Cannot have a NULL play button.");
+            if((m_buttonPlay == null) || (m_buttonExit == null)) {
+                LogUtil.PrintError(this, GetType(), "Cannot have a NULL buttons.");
                 Destroy(this);
             }
         }
@@ -22,6 +23,10 @@ namespace UI.MainMenu {
         private void Start() {
             m_buttonPlay.OnClickAsObservable()
                 .Subscribe(_ => m_levelSetter.LoadGamePlay())
+                .AddTo(this);
+
+            m_buttonExit.OnClickAsObservable()
+                .Subscribe(_ => m_levelSetter.ExitGame())
                 .AddTo(this);
         }
     }

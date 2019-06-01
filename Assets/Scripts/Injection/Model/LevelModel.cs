@@ -13,6 +13,7 @@ namespace Injection.Model {
             void LoadMainMenu();
             void LoadGamePlay();
             void ReloadCurrentLevel();
+            void ExitGame();
         }
 
         #endregion
@@ -61,6 +62,11 @@ namespace Injection.Model {
 
         public void ReloadCurrentLevel() {
             LoadScene(GetCurrentSceneIndex());
+        }
+
+        public void ExitGame() {
+            LogUtil.PrintInfo(this, GetType(), "ExitGame() call. Thank you for playing.");
+            Application.Quit();
         }
     }
 
