@@ -15,7 +15,7 @@ namespace Character.Aim
         private void Start() {
             this.UpdateAsObservable()
                 .Select(_ => m_roundGetter.GetTimer().Value)
-                .Where(timer => (timer > 0))
+		.Where(timer => (timer > 0) && (Time.timeScale > 0))
                 .Subscribe(_ => {
                     transform.up = GetMouseDirection();
                 })
