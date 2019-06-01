@@ -80,7 +80,7 @@ namespace Character.AI {
                 .Where(hasPressed => hasPressed &&
                     (m_roundGetter.GetTimer().Value > 0))
                 .Subscribe(timestamp => {
-                    bool isToggled = m_statsSetter.InvokeRechargeableSkill(!m_skillInvocableRechargeable.m_isActive);
+                    bool isToggled = m_statsSetter.UseRechargeableSkill(!m_skillInvocableRechargeable.m_isActive);
 
                     if(isToggled) {
                         m_skillInvocableRechargeable.UseSkill();
@@ -91,10 +91,12 @@ namespace Character.AI {
                 })
                 .AddTo(this);
 
-            //Force-stop Skill when the invocable-rechargeable skill
-            //from playerStats is drained
+            //Force-stop Skill when:
+            // [1] the rechargeable skill from playerStats has been drained, OR
+            // [2] when the skill has been auto-recharged and not in use
             m_statsGetter.GetRechargeableSkill()
-                .Where(charge => (charge == 0))
+                .Where(charge => (charge == 0) || 
+                    (m_statsGetter.IsRechargeableSkillOnFull() && !m_statsGetter.IsRechargeableSkillInUse()))
                 .Subscribe(_ => m_skillInvocableRechargeable.StopSkill())
                 .AddTo(this);
         }

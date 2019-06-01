@@ -45,7 +45,9 @@ namespace UI.GamePlay {
 
         private void ConfigureButtons() {
             UpdateStatsProgress();
-            m_shop.RefillSkillRechargeable(0); //auto-refill when a round is over
+
+            //auto-refill when a round is over as a reward for the player
+            m_shop.RefillSkillRechargeable(0); 
 
             RefreshItems();
 
@@ -77,19 +79,19 @@ namespace UI.GamePlay {
                 m_healthPlus1.Disable(false);
             }
 
-            if(m_stat.IsLimitedMaxCap()) {
+            if(m_stat.IsLimitedSkillMaxCap()) {
                 m_skillLimitedCapPlus1.Disable(false);
             }
 
-            if(m_stat.IsLimitedOnFull()) {
+            if(m_stat.IsLimitedSkillOnFull()) {
                 m_skillLimitedRefill.Disable(false);
             }
 
-            if(m_stat.IsRechargeableMaxCap()) {
+            if(m_stat.IsRechargeableSkillMaxCap()) {
                 m_skillRechargeableCapPlus1.Disable(false);
             }
 
-            if(m_stat.IsRechargeableRegenMaxCap()) {
+            if(m_stat.IsRechargeableSkillRegenMaxCap()) {
                 m_skillRechargeableRegenTimeDecreaseByHalfSecond.Disable(false);
             }
 

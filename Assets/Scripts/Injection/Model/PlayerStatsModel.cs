@@ -35,14 +35,16 @@ namespace Injection.Model {
             string GetRechargeableSkillProgress();
             string GetRechargeableSkillRegenProgress();
             int GetRechargeableSkillCurrentCap();
-            bool IsRechargeableMaxCap();
-            bool IsRechargeableRegenMaxCap();
+            bool IsRechargeableSkillMaxCap();
+            bool IsRechargeableSkillRegenMaxCap();
+            bool IsRechargeableSkillInUse();
+            bool IsRechargeableSkillOnFull();
 
             ReactiveProperty<int> GetLimitedSkill();
             string GetLimitedSkillProgress();
             int GetLimitedSkillCurrentCap();
-            bool IsLimitedMaxCap();
-            bool IsLimitedOnFull();
+            bool IsLimitedSkillMaxCap();
+            bool IsLimitedSkillOnFull();
 
             ReactiveProperty<int> GetScore();
             ReactiveProperty<int> GetCoins();
@@ -50,7 +52,7 @@ namespace Injection.Model {
 
         public interface IStatSetter {
             bool DeductHealthByOne();
-            bool InvokeRechargeableSkill(bool shouldUse);
+            bool UseRechargeableSkill(bool shouldUse);
             bool UseLimitedSkill();
         }
 
@@ -160,7 +162,7 @@ namespace Injection.Model {
         /* 
          * Returns if the shield was toggled. If FALSE, it is in regen state. 
          */
-        public bool InvokeRechargeableSkill(bool shouldUse) {
+        public bool UseRechargeableSkill(bool shouldUse) {
             if(m_reactiveSkillRechargeable.Value > 0) {
                 m_isRechargeableSkillInUse = shouldUse;
                 ResetRechargeRegen();
@@ -194,12 +196,20 @@ namespace Injection.Model {
             return (m_reactiveHealth.Value == 0);
         }
 
-        public bool IsRechargeableMaxCap() {
+        public bool IsRechargeableSkillMaxCap() {
             return (m_capSkillRechargeable == m_maxCapSkillRechargeable);
         }
 
-        public bool IsRechargeableRegenMaxCap() {
+        public bool IsRechargeableSkillRegenMaxCap() {
             return (m_skillRechargeableRegenTimeDecrement == m_skillRechargeableRegenTime);
+        }
+
+        public bool IsRechargeableSkillInUse() {
+            return m_isRechargeableSkillInUse;
+        }
+
+        public bool IsRechargeableSkillOnFull() {
+            return (m_reactiveSkillRechargeable.Value == m_capSkillRechargeable);
         }
 
         public ReactiveProperty<int> GetRechargeableSkill() {
@@ -210,11 +220,11 @@ namespace Injection.Model {
             return m_reactiveSkillLimited;
         }
 
-        public bool IsLimitedMaxCap() {
+        public bool IsLimitedSkillMaxCap() {
             return (m_capSkillLimited == m_maxCapSkillLimited);
         }
 
-        public bool IsLimitedOnFull() {
+        public bool IsLimitedSkillOnFull() {
             return (m_reactiveSkillLimited.Value == m_capSkillLimited);
         }
 
@@ -300,7 +310,7 @@ namespace Injection.Model {
         }
 
         public bool IncreaseSkillLimitedMaxByOne(int coinCost) {
-            if(!IsLimitedMaxCap() && DeductCoinsBy(coinCost)) {
+            if(!IsLimitedSkillMaxCap() && DeductCoinsBy(coinCost)) {
                 m_capSkillLimited++;
                 return true;
             }
@@ -319,6 +329,7 @@ namespace Injection.Model {
 
         public bool RefillSkillRechargeable(int coinCost) {
             if(DeductCoinsBy(coinCost)) {
+                m_isRechargeableSkillInUse = false;
                 m_reactiveSkillRechargeable.Value = m_capSkillRechargeable;
                 return true;
             }
