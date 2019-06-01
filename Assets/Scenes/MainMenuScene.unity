@@ -2471,7 +2471,7 @@ GameObject:
   - component: {fileID: 957751100}
   - component: {fileID: 957751099}
   m_Layer: 0
-  m_Name: ButtonExit
+  m_Name: ButtonExit-HIDDEN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2534,7 +2534,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 957751100}
   m_OnClick:
     m_PersistentCalls:
@@ -2548,14 +2548,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 957751097}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.28676468, b: 0.28676468, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2749,7 +2749,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1076357737
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4101,7 +4101,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -47.700195, y: -14.999939}
+  m_AnchoredPosition: {x: -15.774994, y: -15}
   m_SizeDelta: {x: 31.549988, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1732083645
@@ -4203,7 +4203,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1784853560
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5631,7 +5631,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -47.7, y: -14.999939}
+  m_AnchoredPosition: {x: -15.774994, y: -15}
   m_SizeDelta: {x: 31.549988, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2062647590
