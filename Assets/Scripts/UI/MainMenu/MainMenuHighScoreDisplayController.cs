@@ -7,8 +7,12 @@ using Zenject;
 namespace UI.MainMenu
 {
 
-    public class MainMenuElementController : MonoBehaviour
+    public class MainMenuHighScoreDisplayController : MonoBehaviour
     {
+
+        [SerializeField] private Image m_panelNoHighScore;
+
+        [Space]
 
         [SerializeField] private Image m_panelHighScore;
         [SerializeField] private TextMeshProUGUI m_textHighScore;
@@ -29,11 +33,17 @@ namespace UI.MainMenu
                 m_buttonTextChallenge : m_buttonTextDefault;
 
             m_panelHighScore.gameObject.SetActive(hasHighScore);
+            m_panelNoHighScore.gameObject.SetActive(!hasHighScore);
 
-            if(hasHighScore) {
+            if (hasHighScore) {
                 m_textHighScore.text = m_playerPrefsGetter.GetHighScore().ToString();
                 m_textHighScorePlayer.text = m_playerPrefsGetter.GetHighScorePlayerName();
             }
+            else {
+                LogUtil.PrintInfo(this, GetType(), "No high score to display.");
+            }
+
+            Destroy(this);
         }
 
     }

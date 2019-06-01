@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Zenject;
+using Injection.Model;
 
 namespace Character.Aim
 {
@@ -8,10 +10,12 @@ namespace Character.Aim
     public class PlayerAim : AimBehaviour
     {
 
+        [Inject] private readonly RoundModel.IGetter m_roundGetter;
+
         private void Start() {
             this.UpdateAsObservable()
-                .Select(_ => Time.timeScale)
-                .Where(timeScale => (timeScale > 0))
+                .Select(_ => m_roundGetter.GetTimer().Value)
+                .Where(timer => (timer > 0))
                 .Subscribe(_ => {
                     transform.up = GetMouseDirection();
                 })
