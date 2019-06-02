@@ -1,5 +1,5 @@
 ﻿using Injection.Model;
-using Misc;
+using Shop;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -18,13 +18,13 @@ namespace UI.GamePlay {
         [SerializeField] private TextMeshProUGUI m_textShieldRegenProgress;
 
         [Header("Shop Item buttons")]
-        [SerializeField] private ShopItem m_healthPlus1;
+        [SerializeField] private ShopItemView m_healthPlus1;
         [Space]
-        [SerializeField] private ShopItem m_skillLimitedRefill;
-        [SerializeField] private ShopItem m_skillLimitedCapPlus1;
+        [SerializeField] private ShopItemView m_skillLimitedRefill;
+        [SerializeField] private ShopItemView m_skillLimitedCapPlus1;
         [Space]
-        [SerializeField] private ShopItem m_skillRechargeableRegenTimeDecreaseByHalfSecond;
-        [SerializeField] private ShopItem m_skillRechargeableCapPlus1;
+        [SerializeField] private ShopItemView m_skillRechargeableRegenTimeDecreaseByHalfSecond;
+        [SerializeField] private ShopItemView m_skillRechargeableCapPlus1;
 
         [Inject] private readonly PlayerStatsModel.IShop m_shop;
         [Inject] private readonly PlayerStatsModel.IStatGetter m_stat;
@@ -55,7 +55,7 @@ namespace UI.GamePlay {
             ForceCheckNonCoinIssueForItems();
         }
 
-        private void TakeItemThenForceCheckAllStock(ShopItem item) {
+        private void TakeItemThenForceCheckAllStock(ShopItemView item) {
             item.m_isTaken = true;
             ForceCheckCoinCostForItems();
             ForceCheckNonCoinIssueForItems();
@@ -115,7 +115,7 @@ namespace UI.GamePlay {
         private void SetObservables() {
             m_healthPlus1.m_button.OnClickAsObservable()
                .Subscribe(_ => {
-                   if(m_shop.IncreaseHealthByOne(m_healthPlus1.m_coinCost)) {
+                   if(m_shop.IncreaseHealthByOne(m_healthPlus1.m_shopItem.m_coinCost)) {
                        TakeItemThenForceCheckAllStock(m_healthPlus1);
                    }
                    else {
@@ -127,7 +127,7 @@ namespace UI.GamePlay {
 
              m_skillLimitedCapPlus1.m_button.OnClickAsObservable()
                .Subscribe(_ => {
-                   if (m_shop.IncreaseSkillLimitedMaxByOne(m_skillLimitedCapPlus1.m_coinCost)) {
+                   if (m_shop.IncreaseSkillLimitedMaxByOne(m_skillLimitedCapPlus1.m_shopItem.m_coinCost)) {
                        TakeItemThenForceCheckAllStock(m_skillLimitedCapPlus1);
                    }
                    else {
@@ -139,7 +139,7 @@ namespace UI.GamePlay {
 
             m_skillLimitedRefill.m_button.OnClickAsObservable()
                .Subscribe(_ => {
-                   if (m_shop.RefillSkillLimited(m_skillLimitedRefill.m_coinCost)) {
+                   if (m_shop.RefillSkillLimited(m_skillLimitedRefill.m_shopItem.m_coinCost)) {
                        TakeItemThenForceCheckAllStock(m_skillLimitedRefill);
                    }
                    else {
@@ -151,7 +151,7 @@ namespace UI.GamePlay {
 
            m_skillRechargeableCapPlus1.m_button.OnClickAsObservable()
                .Subscribe(_ => {
-                   if (m_shop.IncreaseSkillRechargeableByOne(m_skillRechargeableCapPlus1.m_coinCost)) {
+                   if (m_shop.IncreaseSkillRechargeableByOne(m_skillRechargeableCapPlus1.m_shopItem.m_coinCost)) {
                        TakeItemThenForceCheckAllStock(m_skillRechargeableCapPlus1);
                    }
                    else {
@@ -164,7 +164,7 @@ namespace UI.GamePlay {
              m_skillRechargeableRegenTimeDecreaseByHalfSecond.m_button.OnClickAsObservable()
                .Subscribe(_ => {
                    if (m_shop.DecreaseSkillRechargeableRegenTimeByHalfSecond(
-                       m_skillRechargeableRegenTimeDecreaseByHalfSecond.m_coinCost)) {
+                       m_skillRechargeableRegenTimeDecreaseByHalfSecond.m_shopItem.m_coinCost)) {
                        TakeItemThenForceCheckAllStock(m_skillRechargeableRegenTimeDecreaseByHalfSecond);
                    }
                    else {

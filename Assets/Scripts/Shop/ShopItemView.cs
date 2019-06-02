@@ -2,32 +2,40 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Misc {
+namespace Shop {
 
     [RequireComponent(typeof(Button))]
-    public class ShopItem : MonoBehaviour
+    public class ShopItemView : MonoBehaviour
     {
 
-        [Range(1, 50)]
-        public int m_coinCost;
-
-        [Space]
-
+        [SerializeField] private TextMeshProUGUI m_textTitle;
+        [SerializeField] private TextMeshProUGUI m_textDetails;
         [SerializeField] private TextMeshProUGUI m_textCoinCost;
         [SerializeField] private TextMeshProUGUI m_textFeedback;
 
-        [TextArea]
-        [SerializeField] private string m_feedbackNonCoinIssue;
+        public ShopItem m_shopItem;
 
         public bool m_isTaken;
         public Button m_button { get; private set; }
 
-        private const string m_spielNotEnoughCoins = "Not enough coins.";
-
         private void Awake() {
+            if(m_shopItem == null) {
+                LogUtil.PrintError(this, GetType(), "Cannot have NULL shop item value.");
+                Destroy(this);
+            }
+
             m_button = GetComponent<Button>();
 
-            m_textCoinCost.text = m_coinCost.ToString();
+            //not on Start() where it may be called many times
+            //this needs to be configured only once
+            ConfigureView(); 
+        }
+
+        private void ConfigureView() {
+            m_textTitle.text = m_shopItem.m_title;
+            m_textDetails.text = m_shopItem.m_details;
+            m_textCoinCost.text = m_shopItem.m_coinCost.ToString();
+
             Refresh();
         }
 
@@ -41,7 +49,7 @@ namespace Misc {
             if(m_isTaken) {
                 return;
             }
-            else if (coins >= m_coinCost) {
+            else if (coins >= m_shopItem.m_coinCost) {
                 Enable();
             }
             else {
@@ -52,7 +60,7 @@ namespace Misc {
         public void Disable(bool isCoinIssue) {
             m_button.interactable = false;
             m_textFeedback.text = isCoinIssue ? 
-                m_spielNotEnoughCoins : m_feedbackNonCoinIssue;
+                ShopItem.SPIEL_NOT_ENOUGH_COINS : m_shopItem.m_spielCustomMessage;
             m_textFeedback.gameObject.SetActive(true);
 
         }
