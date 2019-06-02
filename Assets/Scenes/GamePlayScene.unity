@@ -1466,11 +1466,14 @@ MonoBehaviour:
   m_textRocketsProgress: {fileID: 1213513884}
   m_textShieldDurationProgress: {fileID: 2015363067}
   m_textShieldRegenProgress: {fileID: 1624802636}
-  m_healthPlus1: {fileID: 2135183962}
-  m_skillLimitedRefill: {fileID: 1179671254}
-  m_skillLimitedCapPlus1: {fileID: 781616887}
-  m_skillRechargeableRegenTimeDecreaseByHalfSecond: {fileID: 1687597742}
-  m_skillRechargeableCapPlus1: {fileID: 416630107}
+  m_shopItemViews:
+  - {fileID: 2135183962}
+  - {fileID: 781616887}
+  - {fileID: 1179671254}
+  - {fileID: 416630107}
+  - {fileID: 1687597742}
+  m_autoRewardedItems:
+  - {fileID: 11400000, guid: 44d2933d29649ae4b977babee9c527be, type: 2}
 --- !u!114 &281326942
 MonoBehaviour:
   m_ObjectHideFlags: 0

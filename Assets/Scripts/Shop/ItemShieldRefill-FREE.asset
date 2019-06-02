@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4e21047ceaeec54bacfeb31aec1d8b6, type: 3}
-  m_Name: ItemShieldRegen-0.5
+  m_Name: ItemShieldRefill-FREE
   m_EditorClassIdentifier: 
-  m_title: -0.5 Shield Regen
-  m_details: 'Reduces shield recharge
+  m_title: Free Shield Recharge
+  m_details: 'Instantly recharges your shield
 
-    time by half a second.'
-  m_spielCustomMessage: Lowest shield regen time reached.
-  m_stat: 5
-  m_statValue: -0.5
-  m_coinCost: 5
+    bar to full. This is free.'
+  m_spielCustomMessage: Shield bar already full.
+  m_stat: 3
+  m_statValue: -999
+  m_coinCost: 0

@@ -17,4 +17,6 @@ MonoBehaviour:
 
     carry one more rocket.'
   m_spielCustomMessage: Max capacity reached.
+  m_stat: 2
+  m_statValue: 1
   m_coinCost: 5

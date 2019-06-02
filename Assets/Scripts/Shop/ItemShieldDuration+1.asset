@@ -17,4 +17,6 @@ MonoBehaviour:
 
     adding 1 more second.'
   m_spielCustomMessage: Max duration reached.
+  m_stat: 4
+  m_statValue: 1
   m_coinCost: 8

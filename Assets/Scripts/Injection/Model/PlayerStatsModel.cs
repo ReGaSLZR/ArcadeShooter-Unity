@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shop;
+using System;
 using UniRx;
 using UnityEngine;
 
@@ -9,21 +10,9 @@ namespace Injection.Model {
         PlayerStatsModel.IStatGetter,
         PlayerStatsModel.ICoinSetter,
         PlayerStatsModel.IScoreSetter,
-        PlayerStatsModel.IShop
+        IShop
     {
         #region Interfaces
-        public interface IShop {
-            bool IncreaseHealthByOne(int coinCost);   
-
-            bool IncreaseSkillLimitedMaxByOne(int coinCost);
-            bool RefillSkillLimited(int coinCost);
-
-            bool IncreaseSkillRechargeableByOne(int coinCost);
-            bool DecreaseSkillRechargeableRegenTimeByHalfSecond(int coinCost);
-            bool RefillSkillRechargeable(int coinCost);
-
-            bool DeductCoinsBy(int coins);
-        }
 
         public interface IStatGetter {
             ReactiveProperty<int> GetHealth();
@@ -280,73 +269,137 @@ namespace Injection.Model {
 
         #region IShop functions
 
-        public bool IncreaseHealthByOne(int coinCost) {
-            if(m_reactiveHealth.Value < m_maxHealth) {
-                m_reactiveHealth.Value++;
-                DeductCoinsBy(coinCost);
+        public bool Shop(ShopItem item) {
+            switch (item.m_stat) {
+                case ShopItem.ForStat.Health: {
+                        return AddHealth((int)item.m_statValue, item.m_coinCost);
+                    }
+                case ShopItem.ForStat.SkillLimitedAmmo: {
+                        return AddSkillLimitedAmmo((int)item.m_statValue, item.m_coinCost);
+                    }
+                case ShopItem.ForStat.SkillLimitedCap: {
+                        return AddSkillLimitedCap((int)item.m_statValue, item.m_coinCost);
+                    }
+                case ShopItem.ForStat.SkillRechargeableAmmo: {
+                        return AddSkillRechargeableAmmo((int)item.m_statValue, item.m_coinCost);
+                    }
+                case ShopItem.ForStat.SkillRechargeableCap: {
+                        return AddSkillRechargeableCap((int)item.m_statValue, item.m_coinCost);
+                    }
+                case ShopItem.ForStat.SkillRechargeableRegen: {
+                        return AddSkillRechargeableRegen(item.m_statValue, item.m_coinCost);
+                    }
+            }
+
+            LogUtil.PrintWarning(this, GetType(), "Shop() ShopItem stat could not be interpreted.");
+            return false;
+        }
+
+        public bool IsMaxValueForStat(ShopItem.ForStat stat) {
+             switch(stat) {
+                    case ShopItem.ForStat.Health: {
+                        return IsHealthMaxCap();
+                     }
+                    case ShopItem.ForStat.SkillLimitedCap: {
+                        return IsLimitedSkillMaxCap();
+                     }
+                    case ShopItem.ForStat.SkillLimitedAmmo: {
+                        return IsLimitedSkillOnFull();
+                    }
+                    case ShopItem.ForStat.SkillRechargeableCap: {
+                        return IsRechargeableSkillMaxCap();
+                    }
+                    case ShopItem.ForStat.SkillRechargeableRegen: {
+                        return IsRechargeableSkillRegenMaxCap();
+                    }    
+                }
+
+            LogUtil.PrintWarning(this, GetType(), "IsMaxValueForStat() ShopItem stat could not be interpreted.");
+            return false;
+        }
+
+        #endregion
+
+        private bool AddHealth(int health, int coinCost) {
+            health = (health == ShopItem.STAT_VALUE_REFILL_TO_CAP) ? m_maxHealth : health;
+            int tempValue = Mathf.Clamp((m_reactiveHealth.Value + health), 0, m_maxHealth);
+
+            if (DeductCoinsBy(coinCost)) {
+                m_reactiveHealth.Value = tempValue;
                 return true;
             }
 
             return false;
         }
 
-        public bool IncreaseSkillRechargeableByOne(int coinCost) {
-            if((m_capSkillRechargeable < m_maxCapSkillRechargeable) 
-                && DeductCoinsBy(coinCost)) {
-                    m_capSkillRechargeable++;
-                    return true;
-            }
+        private bool AddSkillLimitedAmmo(int ammo, int coinCost) {
+            ammo = (ammo == ShopItem.STAT_VALUE_REFILL_TO_CAP) ? m_capSkillLimited : ammo;
+            int tempValue = Mathf.Clamp((m_reactiveSkillLimited.Value + ammo), 0, m_capSkillLimited);
 
-            return false;
-        }
-
-        public bool DecreaseSkillRechargeableRegenTimeByHalfSecond(int coinCost) {
-            if((m_skillRechargeableRegenTimeDecrement < m_skillRechargeableRegenTime) 
-                && DeductCoinsBy(coinCost)) {
-                 m_skillRechargeableRegenTimeDecrement += 0.5f;
-                  return true;
-            }
-            return false;
-        }
-
-        public bool IncreaseSkillLimitedMaxByOne(int coinCost) {
-            if(!IsLimitedSkillMaxCap() && DeductCoinsBy(coinCost)) {
-                m_capSkillLimited++;
+            if (DeductCoinsBy(coinCost)) { 
+                m_reactiveSkillLimited.Value = tempValue;
                 return true;
             }
 
             return false;
         }
 
-        public bool RefillSkillLimited(int coinCost) {
-            if(DeductCoinsBy(coinCost)) {
-                m_reactiveSkillLimited.Value = m_capSkillLimited;
+        private bool AddSkillLimitedCap(int cap, int coinCost) {
+            cap = (cap == ShopItem.STAT_VALUE_REFILL_TO_CAP) ? m_maxCapSkillLimited : cap;
+            int tempValue = Mathf.Clamp((m_capSkillLimited + cap), 0, m_maxCapSkillLimited);
+
+            if (DeductCoinsBy(coinCost)) {
+                m_capSkillLimited = tempValue;
                 return true;
             }
 
             return false;
         }
 
-        public bool RefillSkillRechargeable(int coinCost) {
-            if(DeductCoinsBy(coinCost)) {
+        public bool AddSkillRechargeableAmmo(int ammo, int coinCost) {
+            ammo = (ammo == ShopItem.STAT_VALUE_REFILL_TO_CAP) ? m_capSkillRechargeable : ammo;
+            int tempValue = Mathf.Clamp((m_reactiveSkillRechargeable.Value + ammo), 0, m_capSkillRechargeable);
+
+            if (DeductCoinsBy(coinCost)) {
                 m_isRechargeableSkillInUse = false;
-                m_reactiveSkillRechargeable.Value = m_capSkillRechargeable;
+                m_reactiveSkillRechargeable.Value = tempValue;
                 return true;
             }
 
             return false;
         }
 
-        public bool DeductCoinsBy(int coins) {
-            if(coins <= m_reactiveCoins.Value) {
+        public bool AddSkillRechargeableCap(int cap, int coinCost) {
+            cap = (cap == ShopItem.STAT_VALUE_REFILL_TO_CAP) ? m_maxCapSkillRechargeable : cap;
+            int tempValue = Mathf.Clamp((m_capSkillRechargeable + cap), 0, m_maxCapSkillRechargeable);
+
+            if (DeductCoinsBy(coinCost)) {
+                m_capSkillRechargeable = tempValue;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool AddSkillRechargeableRegen(float regen, int coinCost) {
+            regen = (regen == ShopItem.STAT_VALUE_REFILL_TO_CAP) ? m_skillRechargeableRegenTime : regen;
+            float tempValue = Mathf.Clamp((m_skillRechargeableRegenTimeDecrement + regen), 0f, m_skillRechargeableRegenTime);
+
+            if (DeductCoinsBy(coinCost)) {
+                m_skillRechargeableRegenTimeDecrement = tempValue;
+                return true;
+            }
+            return false;
+        }
+
+        private bool DeductCoinsBy(int coins) {
+            if (coins <= m_reactiveCoins.Value) {
                 m_reactiveCoins.Value -= coins;
                 return true;
             }
 
             return false;
         }
-
-        #endregion
 
     }
 

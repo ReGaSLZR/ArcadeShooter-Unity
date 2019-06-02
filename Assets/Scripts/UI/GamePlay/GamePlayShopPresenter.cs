@@ -18,15 +18,12 @@ namespace UI.GamePlay {
         [SerializeField] private TextMeshProUGUI m_textShieldRegenProgress;
 
         [Header("Shop Item buttons")]
-        [SerializeField] private ShopItemView m_healthPlus1;
-        [Space]
-        [SerializeField] private ShopItemView m_skillLimitedRefill;
-        [SerializeField] private ShopItemView m_skillLimitedCapPlus1;
-        [Space]
-        [SerializeField] private ShopItemView m_skillRechargeableRegenTimeDecreaseByHalfSecond;
-        [SerializeField] private ShopItemView m_skillRechargeableCapPlus1;
+        [SerializeField] private ShopItemView[] m_shopItemViews;
 
-        [Inject] private readonly PlayerStatsModel.IShop m_shop;
+        [Space]
+        [SerializeField] private ShopItem[] m_autoRewardedItems;
+
+        [Inject] private readonly IShop m_shop;
         [Inject] private readonly PlayerStatsModel.IStatGetter m_stat;
         [Inject] private readonly RoundModel.IGetter m_round;
 
@@ -46,8 +43,9 @@ namespace UI.GamePlay {
         private void ConfigureButtons() {
             UpdateStatsProgress();
 
-            //auto-refill when a round is over as a reward for the player
-            m_shop.RefillSkillRechargeable(0); 
+            foreach(ShopItem item in m_autoRewardedItems) {
+                m_shop.Shop(item);
+            }
 
             RefreshItems();
 
@@ -67,34 +65,17 @@ namespace UI.GamePlay {
         private void ForceCheckCoinCostForItems() {
             int currentCoins = m_stat.GetCoins().Value;
 
-            m_healthPlus1.DisplayAvailabilityByCoins(currentCoins);
-            m_skillLimitedCapPlus1.DisplayAvailabilityByCoins(currentCoins);
-            m_skillLimitedRefill.DisplayAvailabilityByCoins(currentCoins);
-            m_skillRechargeableCapPlus1.DisplayAvailabilityByCoins(currentCoins);
-            m_skillRechargeableRegenTimeDecreaseByHalfSecond.DisplayAvailabilityByCoins(currentCoins);
+            foreach(ShopItemView view in m_shopItemViews) {
+                view.DisplayAvailabilityByCoins(currentCoins);
+            }
         }
 
         private void ForceCheckNonCoinIssueForItems() {
-            if(m_stat.IsHealthMaxCap()) {
-                m_healthPlus1.Disable(false);
+            foreach(ShopItemView view in m_shopItemViews) {
+                if(m_shop.IsMaxValueForStat(view.m_shopItem.m_stat)) {
+                    view.Disable(false);
+                }
             }
-
-            if(m_stat.IsLimitedSkillMaxCap()) {
-                m_skillLimitedCapPlus1.Disable(false);
-            }
-
-            if(m_stat.IsLimitedSkillOnFull()) {
-                m_skillLimitedRefill.Disable(false);
-            }
-
-            if(m_stat.IsRechargeableSkillMaxCap()) {
-                m_skillRechargeableCapPlus1.Disable(false);
-            }
-
-            if(m_stat.IsRechargeableSkillRegenMaxCap()) {
-                m_skillRechargeableRegenTimeDecreaseByHalfSecond.Disable(false);
-            }
-
         }
 
         private void UpdateStatsProgress() {
@@ -105,74 +86,24 @@ namespace UI.GamePlay {
         }
 
         private void RefreshItems() {
-            m_healthPlus1.Refresh();
-            m_skillLimitedCapPlus1.Refresh();
-            m_skillLimitedRefill.Refresh();
-            m_skillRechargeableCapPlus1.Refresh();
-            m_skillRechargeableRegenTimeDecreaseByHalfSecond.Refresh();
+            foreach(ShopItemView view in m_shopItemViews) {
+                view.Refresh();
+            }
         }
 
         private void SetObservables() {
-            m_healthPlus1.m_button.OnClickAsObservable()
-               .Subscribe(_ => {
-                   if(m_shop.IncreaseHealthByOne(m_healthPlus1.m_shopItem.m_coinCost)) {
-                       TakeItemThenForceCheckAllStock(m_healthPlus1);
-                   }
-                   else {
-                       LogUtil.PrintInfo(this, GetType(), "Could not +1 health. " +
-                           "Not taking the coin cost.");
-                   }
-               })
-               .AddTo(this);
-
-             m_skillLimitedCapPlus1.m_button.OnClickAsObservable()
-               .Subscribe(_ => {
-                   if (m_shop.IncreaseSkillLimitedMaxByOne(m_skillLimitedCapPlus1.m_shopItem.m_coinCost)) {
-                       TakeItemThenForceCheckAllStock(m_skillLimitedCapPlus1);
-                   }
-                   else {
-                       LogUtil.PrintInfo(this, GetType(), "Could not +1 limited skill cap. " +
-                           "Not taking the coin cost.");
-                   }
-               })
-               .AddTo(this);
-
-            m_skillLimitedRefill.m_button.OnClickAsObservable()
-               .Subscribe(_ => {
-                   if (m_shop.RefillSkillLimited(m_skillLimitedRefill.m_shopItem.m_coinCost)) {
-                       TakeItemThenForceCheckAllStock(m_skillLimitedRefill);
-                   }
-                   else {
-                       LogUtil.PrintInfo(this, GetType(), "Could not refill skill limited. " +
-                           "Not taking the coin cost.");
-                   }
-               })
-               .AddTo(this);
-
-           m_skillRechargeableCapPlus1.m_button.OnClickAsObservable()
-               .Subscribe(_ => {
-                   if (m_shop.IncreaseSkillRechargeableByOne(m_skillRechargeableCapPlus1.m_shopItem.m_coinCost)) {
-                       TakeItemThenForceCheckAllStock(m_skillRechargeableCapPlus1);
-                   }
-                   else {
-                       LogUtil.PrintInfo(this, GetType(), "Could not +1 rechargeable skill cap. " +
-                           "Not taking the coin cost.");
-                   }
-               })
-               .AddTo(this);
-
-             m_skillRechargeableRegenTimeDecreaseByHalfSecond.m_button.OnClickAsObservable()
-               .Subscribe(_ => {
-                   if (m_shop.DecreaseSkillRechargeableRegenTimeByHalfSecond(
-                       m_skillRechargeableRegenTimeDecreaseByHalfSecond.m_shopItem.m_coinCost)) {
-                       TakeItemThenForceCheckAllStock(m_skillRechargeableRegenTimeDecreaseByHalfSecond);
-                   }
-                   else {
-                       LogUtil.PrintInfo(this, GetType(), "Could not -0.5s rechargeable skill regen time. " +
-                           "Not taking the coin cost.");
-                   }
-               })
-               .AddTo(this);
+            foreach(ShopItemView view in m_shopItemViews) {
+                view.m_button.OnClickAsObservable()
+                    .Subscribe(_ => {
+                        if (m_shop.Shop(view.m_shopItem)) {
+                            TakeItemThenForceCheckAllStock(view);
+                        }
+                        else {
+                            LogUtil.PrintWarning(this, GetType(), "Could not shop for item.");
+                        }
+                    })
+                    .AddTo(this);
+            }
         }
 
     }

@@ -17,4 +17,6 @@ MonoBehaviour:
 
     by getting +1 life.'
   m_spielCustomMessage: Cannot go above total of 3.
+  m_stat: 0
+  m_statValue: 1
   m_coinCost: 8

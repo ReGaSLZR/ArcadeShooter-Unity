@@ -17,4 +17,6 @@ MonoBehaviour:
 
     carrying capacity.'
   m_spielCustomMessage: Rocket ammo on full.
+  m_stat: 1
+  m_statValue: -999
   m_coinCost: 8
